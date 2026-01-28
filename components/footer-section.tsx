@@ -1,3 +1,5 @@
+// components/footer-section.tsx
+
 "use client"
 
 import { useRef, useEffect, useState } from "react"
@@ -51,7 +53,7 @@ export function FooterSection() {
       <div ref={contentRef}>
         {/* Main CTA */}
         <div className="max-w-2xl mb-24">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">04 / Get Started</span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">05 / Get Started</span>
           <h2 className="mt-4 font-[var(--font-bebas)] text-5xl md:text-7xl tracking-tight">
             KNOW YOUR COUNTY
           </h2>
@@ -71,7 +73,7 @@ export function FooterSection() {
             />
             <button
               type="submit"
-              className="group flex items-center justify-center gap-2 bg-accent text-accent-foreground px-6 py-3 font-mono text-sm uppercase tracking-wider hover:bg-accent/90 transition-colors"
+              className="group flex items-center justify-center gap-2 bg-accent text-accent-foreground px-6 py-3 font-mono text-sm uppercase tracking-wider hover:bg-accent/90 transition-colors cursor-pointer"
             >
               Join Waitlist
               <BitmapChevron className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -80,7 +82,7 @@ export function FooterSection() {
         </div>
 
         {/* Footer grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-16">
           {/* Product */}
           <div className="col-span-1">
             <h4 className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground mb-4">Product</h4>
@@ -97,7 +99,6 @@ export function FooterSection() {
             <ul className="space-y-2">
               <li className="font-mono text-xs text-foreground/80 hover:text-accent transition-colors cursor-pointer">About</li>
               <li className="font-mono text-xs text-foreground/80 hover:text-accent transition-colors cursor-pointer">Blog</li>
-              <li className="font-mono text-xs text-foreground/80 hover:text-accent transition-colors cursor-pointer">Careers</li>
             </ul>
           </div>
 
@@ -117,7 +118,7 @@ export function FooterSection() {
               <li>
                 <a
                   href="mailto:hello@ranger.local"
-                  className="font-mono text-xs text-foreground/80 hover:text-accent transition-colors"
+                  className="font-mono text-xs text-foreground/80 hover:text-accent transition-colors cursor-pointer"
                 >
                   Email
                 </a>
@@ -125,30 +126,11 @@ export function FooterSection() {
               <li>
                 <a
                   href="#"
-                  className="font-mono text-xs text-foreground/80 hover:text-accent transition-colors"
+                  className="font-mono text-xs text-foreground/80 hover:text-accent transition-colors cursor-pointer"
                 >
                   Twitter/X
                 </a>
               </li>
-            </ul>
-          </div>
-
-          {/* Stack */}
-          <div className="col-span-1">
-            <h4 className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground mb-4">Stack</h4>
-            <ul className="space-y-2">
-              <li className="font-mono text-xs text-foreground/80">Next.js</li>
-              <li className="font-mono text-xs text-foreground/80">Tailwind CSS</li>
-              <li className="font-mono text-xs text-foreground/80">Vercel</li>
-            </ul>
-          </div>
-
-          {/* Year */}
-          <div className="col-span-1">
-            <h4 className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground mb-4">Year</h4>
-            <ul className="space-y-2">
-              <li className="font-mono text-xs text-foreground/80">2026</li>
-              <li className="font-mono text-xs text-foreground/80">v0.1</li>
             </ul>
           </div>
         </div>

@@ -1,3 +1,5 @@
+// components/split-flap-text.tsx
+
 "use client"
 
 import type React from "react"
@@ -129,26 +131,13 @@ const CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".split("")
 
 function SplitFlapTextInner({ text, className = "", speed = 50 }: SplitFlapTextProps) {
   const chars = useMemo(() => text.split(""), [text])
-  const [animationKey, setAnimationKey] = useState(0)
-  const [hasInitialized, setHasInitialized] = useState(false)
+  const [animationKey] = useState(0)
   const audio = useSplitFlapAudio()
-
-  const handleMouseEnter = useCallback(() => {
-    setAnimationKey((prev) => prev + 1)
-  }, [])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setHasInitialized(true)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [])
 
   return (
     <div
-      className={`inline-flex gap-[0.08em] items-center cursor-pointer ${className}`}
+      className={`inline-flex gap-[0.08em] items-center ${className}`}
       aria-label={text}
-      onMouseEnter={handleMouseEnter}
       style={{ perspective: "1000px" }}
     >
       {chars.map((char, index) => (
@@ -157,7 +146,6 @@ function SplitFlapTextInner({ text, className = "", speed = 50 }: SplitFlapTextP
           char={char.toUpperCase()}
           index={index}
           animationKey={animationKey}
-          skipEntrance={hasInitialized}
           speed={speed}
           playClick={audio?.playClick}
         />
@@ -174,16 +162,15 @@ interface SplitFlapCharProps {
   char: string
   index: number
   animationKey: number
-  skipEntrance: boolean
   speed: number
   playClick?: () => void
 }
 
-function SplitFlapChar({ char, index, animationKey, skipEntrance, speed, playClick }: SplitFlapCharProps) {
+function SplitFlapChar({ char, index, animationKey, speed, playClick }: SplitFlapCharProps) {
   const displayChar = CHARSET.includes(char) ? char : " "
   const isSpace = char === " "
-  const [currentChar, setCurrentChar] = useState(skipEntrance ? displayChar : " ")
-  const [isSettled, setIsSettled] = useState(skipEntrance)
+  const [currentChar, setCurrentChar] = useState(" ")
+  const [isSettled, setIsSettled] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -206,7 +193,7 @@ function SplitFlapChar({ char, index, animationKey, skipEntrance, speed, playCli
     setCurrentChar(CHARSET[Math.floor(Math.random() * CHARSET.length)])
 
     const baseFlips = 8
-    const startDelay = skipEntrance ? tileDelay * 400 : tileDelay * 800
+    const startDelay = tileDelay * 800
     let flipIndex = 0
     let hasStartedSettling = false
 
@@ -232,7 +219,7 @@ function SplitFlapChar({ char, index, animationKey, skipEntrance, speed, playCli
       if (intervalRef.current) clearInterval(intervalRef.current)
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [displayChar, isSpace, tileDelay, animationKey, skipEntrance, index, speed, playClick])
+  }, [displayChar, isSpace, tileDelay, animationKey, index, speed, playClick])
 
   if (isSpace) {
     return (
@@ -247,7 +234,7 @@ function SplitFlapChar({ char, index, animationKey, skipEntrance, speed, playCli
 
   return (
     <motion.div
-      initial={skipEntrance ? false : { opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: tileDelay, duration: 0.3, ease: "easeOut" }}
       className="relative overflow-hidden flex items-center justify-center font-[family-name:var(--font-bebas)]"
@@ -285,7 +272,7 @@ function SplitFlapChar({ char, index, animationKey, skipEntrance, speed, playCli
         initial={{ rotateX: -90 }}
         animate={{ rotateX: 0 }}
         transition={{
-          delay: skipEntrance ? tileDelay * 0.5 : tileDelay + 0.15,
+          delay: tileDelay + 0.15,
           duration: 0.25,
           ease: [0.22, 0.61, 0.36, 1],
         }}

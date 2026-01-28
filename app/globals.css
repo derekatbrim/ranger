@@ -133,3 +133,12 @@
   background: oklch(0.7 0.2 45);
   color: oklch(0.08 0 0);
 }
+
+/* Global cursor styles for interactive elements */
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="button"] {
+  cursor: pointer;
+}
