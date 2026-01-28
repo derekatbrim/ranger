@@ -1,0 +1,125 @@
+{
+  "_comment": "Ranger Source Configuration - Add new sources here, no code changes needed",
+  
+  "sources": [
+    {
+      "name": "Lake McHenry Scanner",
+      "source_type": "html",
+      "url": "https://www.lakemchenryscanner.com/category/news/mchenry-county/",
+      "region": "mchenry_county",
+      "category": "crime",
+      "fetch_interval_minutes": 15,
+      "reliability_score": 0.9,
+      "config": {
+        "note": "Scanner-based news site, high reliability for crime reports"
+      }
+    },
+    {
+      "name": "Shaw Local - McHenry County",
+      "source_type": "html",
+      "url": "https://www.shawlocal.com/northwest-herald/local-news/",
+      "region": "mchenry_county", 
+      "category": "news",
+      "fetch_interval_minutes": 30,
+      "reliability_score": 0.85,
+      "config": {
+        "note": "Northwest Herald local news section"
+      }
+    },
+    {
+      "name": "McHenry County Sheriff ArcGIS",
+      "source_type": "api",
+      "url": "https://services3.arcgis.com/dty2kHktVXHrqO8i/ArcGIS/rest/services/Crime_Incidents/FeatureServer/0/query",
+      "region": "mchenry_county",
+      "category": "crime",
+      "fetch_interval_minutes": 60,
+      "reliability_score": 1.0,
+      "config": {
+        "type": "arcgis",
+        "params": {
+          "where": "1=1",
+          "outFields": "*",
+          "f": "json",
+          "resultRecordCount": 100,
+          "orderByFields": "OBJECTID DESC"
+        },
+        "note": "Official Sheriff data - unincorporated areas only"
+      }
+    },
+    {
+      "name": "McHenry County Sheriff Press Releases",
+      "source_type": "html",
+      "url": "https://www.mchenrysheriff.org/media-releases/",
+      "region": "mchenry_county",
+      "category": "crime",
+      "fetch_interval_minutes": 60,
+      "reliability_score": 1.0,
+      "config": {
+        "note": "Official press releases"
+      }
+    },
+    {
+      "name": "Crystal Lake Patch",
+      "source_type": "html",
+      "url": "https://patch.com/illinois/crystallake",
+      "region": "mchenry_county",
+      "category": "news",
+      "fetch_interval_minutes": 30,
+      "reliability_score": 0.75,
+      "config": {
+        "note": "Community news, mixed quality"
+      }
+    },
+    {
+      "name": "Broadcastify McHenry Sheriff",
+      "source_type": "audio",
+      "url": "https://www.broadcastify.com/listen/feed/35812",
+      "region": "mchenry_county",
+      "category": "crime",
+      "fetch_interval_minutes": 1,
+      "reliability_score": 0.6,
+      "config": {
+        "feed_id": 35812,
+        "type": "broadcastify",
+        "requires_premium": true,
+        "note": "Real-time scanner - requires Whisper transcription"
+      }
+    }
+  ],
+  
+  "expansion_template": {
+    "_comment": "To add a new county, copy this template",
+    "name": "[County Name] - [Source Name]",
+    "source_type": "html|api|audio",
+    "url": "https://...",
+    "region": "new_county_id",
+    "category": "crime|news|permits|business",
+    "fetch_interval_minutes": 15,
+    "reliability_score": 0.8,
+    "config": {}
+  },
+  
+  "regions": {
+    "mchenry_county": {
+      "name": "McHenry County, IL",
+      "center": [42.3239, -88.4506],
+      "municipalities": [
+        "Algonquin", "Bull Valley", "Cary", "Crystal Lake", "Fox River Grove",
+        "Greenwood", "Harvard", "Hebron", "Huntley", "Island Lake", "Johnsburg",
+        "Lake in the Hills", "Lakemoor", "Lakewood", "Marengo", "McCullom Lake",
+        "McHenry", "Oakwood Hills", "Prairie Grove", "Richmond", "Ringwood",
+        "Spring Grove", "Trout Valley", "Union", "Wonder Lake", "Woodstock"
+      ]
+    },
+    "lake_county": {
+      "name": "Lake County, IL",
+      "center": [42.3493, -87.8618],
+      "municipalities": ["Waukegan", "North Chicago", "Gurnee", "Libertyville", "Mundelein"]
+    },
+    "kane_county": {
+      "name": "Kane County, IL", 
+      "center": [41.9389, -88.4297],
+      "municipalities": ["Aurora", "Elgin", "Geneva", "St. Charles", "Batavia"]
+    }
+  }
+}
