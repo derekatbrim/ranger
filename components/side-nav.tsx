@@ -2,7 +2,7 @@
 
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { cn } from "@/lib/utils"
 import { Menu, X } from "lucide-react"
 
@@ -11,7 +11,7 @@ const navItems = [
   { id: "categories", label: "Coverage" },
   { id: "how-it-works", label: "Process" },
   { id: "coverage", label: "Area" },
-  { id: "sample-intel", label: "Preview" },
+  { id: "intel-pipeline", label: "Pipeline" },
   { id: "footer", label: "Contact" },
 ]
 
@@ -51,13 +51,21 @@ export function SideNav() {
     }
   }, [mobileMenuOpen])
 
-  const scrollToSection = (id: string) => {
+  const scrollToSection = useCallback((id: string) => {
     const element = document.getElementById(id)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
     }
     setMobileMenuOpen(false)
-  }
+  }, [])
+
+  const openMenu = useCallback(() => {
+    setMobileMenuOpen(true)
+  }, [])
+
+  const closeMenu = useCallback(() => {
+    setMobileMenuOpen(false)
+  }, [])
 
   return (
     <>
@@ -91,8 +99,11 @@ export function SideNav() {
 
       {/* Mobile hamburger button */}
       <button
-        onClick={() => setMobileMenuOpen(true)}
-        className="fixed top-6 right-6 z-50 md:hidden w-12 h-12 flex items-center justify-center border border-border/50 bg-background/80 backdrop-blur-sm cursor-pointer"
+        onClick={openMenu}
+        className={cn(
+          "fixed top-6 right-6 z-50 md:hidden w-12 h-12 flex items-center justify-center border border-border/50 bg-background/80 backdrop-blur-sm cursor-pointer",
+          mobileMenuOpen && "opacity-0 pointer-events-none"
+        )}
         aria-label="Open menu"
       >
         <Menu className="w-5 h-5 text-foreground" />
@@ -101,7 +112,7 @@ export function SideNav() {
       {/* Mobile full-screen menu */}
       <div
         className={cn(
-          "fixed inset-0 z-[100] md:hidden transition-all duration-500",
+          "fixed inset-0 z-[100] md:hidden transition-opacity duration-300",
           mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
       >
@@ -110,24 +121,25 @@ export function SideNav() {
         
         {/* Grid pattern */}
         <div 
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
             backgroundImage: "linear-gradient(to right, oklch(0.2 0 0) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.2 0 0) 1px, transparent 1px)",
             backgroundSize: "60px 60px"
           }}
         />
 
-        {/* Close button */}
+        {/* Close button - must be outside the background divs and have high z-index */}
         <button
-          onClick={() => setMobileMenuOpen(false)}
-          className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border border-border/50 bg-card cursor-pointer"
+          onClick={closeMenu}
+          className="absolute top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center border border-border/50 bg-card cursor-pointer active:bg-accent active:border-accent"
           aria-label="Close menu"
+          type="button"
         >
           <X className="w-5 h-5 text-foreground" />
         </button>
 
         {/* Menu content */}
-        <div className="relative h-full flex flex-col justify-center px-8">
+        <div className="relative z-[105] h-full flex flex-col justify-center px-8">
           {/* Brand */}
           <div className="absolute top-8 left-8">
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">Ranger</span>
@@ -152,7 +164,7 @@ export function SideNav() {
                 <span
                   className={cn(
                     "font-[var(--font-bebas)] text-5xl tracking-tight transition-colors duration-200",
-                    activeSection === id ? "text-accent" : "text-foreground group-hover:text-accent"
+                    activeSection === id ? "text-accent" : "text-foreground active:text-accent"
                   )}
                 >
                   {label.toUpperCase()}

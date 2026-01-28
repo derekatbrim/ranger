@@ -1,17 +1,12 @@
+// components/categories-section.tsx
+
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { 
-  Shield, 
-  Building2, 
-  Vote, 
-  FileText, 
-  AlertTriangle,
-  TrendingUp 
-} from "lucide-react"
+import { Shield, Building2, Vote, AlertTriangle, FileText, TrendingUp } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -19,44 +14,44 @@ const categories = [
   {
     icon: Shield,
     title: "Crime & Safety",
-    description: "Arrests, incidents, court outcomes, and emerging patterns across your area.",
-    examples: ["Break-ins by neighborhood", "DUI checkpoints", "Court dispositions"],
-    span: "col-span-2 row-span-2",
+    description: "Arrests, incidents, court outcomes, and emerging patterns in your area.",
+    examples: ["DUI checkpoints", "Vehicle break-ins", "Court dispositions"],
+    span: "md:col-span-2 md:row-span-2",
   },
   {
     icon: Building2,
     title: "Development",
-    description: "New construction, zoning changes, and planning board decisions.",
-    examples: ["Permit applications", "Rezoning votes", "Infrastructure projects"],
-    span: "col-span-1 row-span-1",
+    description: "Construction permits, zoning changes, and planning board decisions.",
+    examples: ["New construction", "Rezoning requests", "Variance approvals"],
+    span: "md:col-span-1 md:row-span-1",
   },
   {
     icon: Vote,
     title: "Elections",
-    description: "Candidate filings, ballot measures, and local election results.",
-    examples: ["Who's running", "Voting deadlines", "Results analysis"],
-    span: "col-span-1 row-span-2",
+    description: "Candidates, ballot measures, polling locations, and results.",
+    examples: ["Candidate filings", "Ballot measures", "Election results"],
+    span: "md:col-span-1 md:row-span-1",
   },
   {
     icon: AlertTriangle,
     title: "Sex Offenders",
-    description: "Registry updates and relocations within your notification radius.",
-    examples: ["New registrations", "Address changes", "Compliance status"],
-    span: "col-span-1 row-span-1",
+    description: "Registry updates, relocations, and proximity alerts.",
+    examples: ["New registrations", "Address changes", "School proximity"],
+    span: "md:col-span-1 md:row-span-1",
   },
   {
     icon: FileText,
     title: "Public Records",
     description: "Business licenses, property transfers, and government filings.",
-    examples: ["New businesses", "Property sales", "FOIA responses"],
-    span: "col-span-2 row-span-1",
+    examples: ["Liquor licenses", "Property sales", "FOIAs"],
+    span: "md:col-span-1 md:row-span-1",
   },
   {
     icon: TrendingUp,
     title: "Trends",
-    description: "What's changing over time. Patterns you'd miss reading daily news.",
-    examples: ["Crime trends", "Growth corridors", "Budget shifts"],
-    span: "col-span-1 row-span-1",
+    description: "Patterns and changes over time that matter to residents.",
+    examples: ["Crime trends", "Property values", "Population shifts"],
+    span: "md:col-span-2 md:row-span-1",
   },
 ]
 
@@ -69,7 +64,7 @@ export function CategoriesSection() {
     if (!sectionRef.current || !headerRef.current || !gridRef.current) return
 
     const ctx = gsap.context(() => {
-      // Header slide in from left
+      // Header animation
       gsap.fromTo(
         headerRef.current,
         { x: -60, opacity: 0 },
@@ -80,27 +75,31 @@ export function CategoriesSection() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: headerRef.current,
-            start: "top 90%",
+            start: "top 85%",
             toggleActions: "play none none reverse",
           },
         }
       )
 
-      const cards = gridRef.current?.querySelectorAll("article")
-      if (cards && cards.length > 0) {
-        gsap.set(cards, { y: 60, opacity: 0 })
-        gsap.to(cards, {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: "top 90%",
-            toggleActions: "play none none reverse",
-          },
-        })
+      // Grid items stagger
+      const items = gridRef.current?.querySelectorAll("article")
+      if (items) {
+        gsap.fromTo(
+          items,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        )
       }
     }, sectionRef)
 
@@ -108,25 +107,17 @@ export function CategoriesSection() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="categories" className="relative py-32 pl-6 md:pl-28 pr-6 md:pr-12">
+    <section id="categories" ref={sectionRef} className="relative py-16 md:py-32 pl-6 md:pl-28 pr-6 md:pr-12">
       {/* Section header */}
-      <div ref={headerRef} className="mb-16 flex items-end justify-between">
-        <div>
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">01 / Coverage</span>
-          <h2 className="mt-4 font-[var(--font-bebas)] text-5xl md:text-7xl tracking-tight">WHAT WE TRACK</h2>
-        </div>
-        <p className="hidden md:block max-w-xs font-mono text-xs text-muted-foreground text-right leading-relaxed">
-          Six categories of local intelligence, updated weekly.
-        </p>
+      <div ref={headerRef} className="mb-10 md:mb-16">
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">01 / Coverage</span>
+        <h2 className="mt-4 font-[var(--font-bebas)] text-4xl md:text-7xl tracking-tight">WHAT WE TRACK</h2>
       </div>
 
-      {/* Asymmetric grid */}
-      <div
-        ref={gridRef}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[180px] md:auto-rows-[200px]"
-      >
+      {/* Category grid */}
+      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-4 max-w-6xl">
         {categories.map((category, index) => (
-          <CategoryCard key={index} category={category} index={index} />
+          <CategoryCard key={index} category={category} />
         ))}
       </div>
     </section>
@@ -135,7 +126,6 @@ export function CategoriesSection() {
 
 function CategoryCard({
   category,
-  index,
 }: {
   category: {
     icon: React.ComponentType<{ className?: string }>
@@ -144,44 +134,67 @@ function CategoryCard({
     examples: string[]
     span: string
   }
-  index: number
 }) {
+  const [isActive, setIsActive] = useState(false)
   const Icon = category.icon
 
   return (
     <article
       className={cn(
-        "group relative border border-border/40 p-5 flex flex-col justify-between transition-all duration-500 cursor-pointer overflow-hidden",
+        "group relative border border-border/40 p-5 flex flex-col justify-between transition-all duration-500 overflow-hidden cursor-pointer",
         category.span,
-        "hover:border-accent/60"
+        "hover:border-accent/60",
+        isActive && "border-accent/60 bg-card"
       )}
+      onClick={() => setIsActive(!isActive)}
+      onMouseEnter={() => setIsActive(true)}
+      onMouseLeave={() => setIsActive(false)}
+      onTouchStart={() => setIsActive(true)}
+      onTouchEnd={() => setTimeout(() => setIsActive(false), 2000)}
     >
-      {/* Background layer */}
-      <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Corner accent */}
+      <div className={cn(
+        "absolute top-0 right-0 w-12 h-12 transition-all duration-500",
+        isActive ? "opacity-100" : "opacity-0"
+      )}>
+        <div className="absolute top-0 right-0 w-full h-[2px] bg-accent" />
+        <div className="absolute top-0 right-0 w-[2px] h-full bg-accent" />
+      </div>
 
-      {/* Content */}
-      <div className="relative z-10">
-        <div className="flex items-center gap-3 mb-3">
-          <Icon className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors duration-300" />
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {String(index + 1).padStart(2, "0")}
-          </span>
+      {/* Top row: icon + title */}
+      <div className="flex items-start gap-4 mb-4">
+        <div className={cn(
+          "p-2 border transition-all duration-300",
+          isActive ? "border-accent bg-accent/10" : "border-border/40"
+        )}>
+          <Icon className={cn(
+            "w-5 h-5 transition-colors duration-300",
+            isActive ? "text-accent" : "text-muted-foreground"
+          )} />
         </div>
-        <h3 className="font-[var(--font-bebas)] text-2xl md:text-3xl tracking-tight group-hover:text-accent transition-colors duration-300">
+        <h3 className={cn(
+          "font-[var(--font-bebas)] text-2xl md:text-3xl tracking-tight transition-colors duration-300 pt-1",
+          isActive && "text-accent"
+        )}>
           {category.title}
         </h3>
       </div>
 
-      {/* Description - reveals on hover */}
-      <div className="relative z-10">
-        <p className="font-mono text-xs text-muted-foreground leading-relaxed mb-3 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+      {/* Description - revealed on hover/tap */}
+      <div className={cn(
+        "transition-all duration-500 overflow-hidden",
+        isActive ? "max-h-48 opacity-100" : "max-h-0 opacity-0 md:max-h-0 md:opacity-0"
+      )}>
+        <p className="font-mono text-xs text-muted-foreground leading-relaxed mb-4">
           {category.description}
         </p>
-        <div className="flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500 delay-75">
+
+        {/* Example tags */}
+        <div className="flex flex-wrap gap-2">
           {category.examples.map((example, i) => (
             <span
               key={i}
-              className="font-mono text-[9px] uppercase tracking-wider text-accent/80 bg-accent/10 px-2 py-1"
+              className="font-mono text-[10px] uppercase tracking-wider px-2 py-1 bg-accent/10 text-accent border border-accent/20"
             >
               {example}
             </span>
@@ -189,10 +202,12 @@ function CategoryCard({
         </div>
       </div>
 
-      {/* Corner accent */}
-      <div className="absolute top-0 right-0 w-12 h-12 opacity-0 group-hover:opacity-100 transition-all duration-500">
-        <div className="absolute top-0 right-0 w-full h-[1px] bg-accent" />
-        <div className="absolute top-0 right-0 w-[1px] h-full bg-accent" />
+      {/* Tap hint on mobile */}
+      <div className={cn(
+        "md:hidden font-mono text-[10px] text-muted-foreground/50 uppercase tracking-wider mt-2 transition-opacity duration-300",
+        isActive ? "opacity-0" : "opacity-100"
+      )}>
+        Tap for details
       </div>
     </article>
   )
