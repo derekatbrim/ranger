@@ -173,36 +173,68 @@ export function DashboardMap({ incidents, selectedIncident, onSelect }: MapProps
       />
       <style jsx global>{`
         .radar-pulse {
-          animation: radar-pulse 2s ease-out infinite;
+          animation: radar-pulse 2.5s ease-out infinite;
         }
         @keyframes radar-pulse {
-          0% { opacity: 0.15; transform: scale(1); }
-          50% { opacity: 0.08; }
-          100% { opacity: 0.15; transform: scale(1); }
+          0% { opacity: 0.25; transform: scale(1); }
+          50% { opacity: 0.1; transform: scale(1.1); }
+          100% { opacity: 0.25; transform: scale(1); }
+        }
+        .radar-glow-red {
+          box-shadow: 0 0 20px 5px rgba(239, 68, 68, 0.3);
+        }
+        .radar-glow-orange {
+          box-shadow: 0 0 20px 5px rgba(249, 115, 22, 0.3);
+        }
+        .radar-glow-blue {
+          box-shadow: 0 0 20px 5px rgba(59, 130, 246, 0.3);
+        }
+        .leaflet-control-zoom {
+          border: none !important;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+          border-radius: 12px !important;
+          overflow: hidden !important;
         }
         .leaflet-control-zoom a {
-          background: white !important;
+          background: rgba(255,255,255,0.9) !important;
+          backdrop-filter: blur(8px) !important;
           color: #44403c !important;
-          border-color: #e7e5e4 !important;
+          border: none !important;
+          width: 36px !important;
+          height: 36px !important;
+          line-height: 36px !important;
+          font-size: 16px !important;
         }
         .leaflet-control-zoom a:hover {
-          background: #f5f5f4 !important;
+          background: rgba(255,255,255,1) !important;
+        }
+        .leaflet-control-zoom a:first-child {
+          border-radius: 12px 12px 0 0 !important;
+        }
+        .leaflet-control-zoom a:last-child {
+          border-radius: 0 0 12px 12px !important;
         }
         .dark .leaflet-control-zoom a {
-          background: #27272a !important;
+          background: rgba(39, 39, 42, 0.9) !important;
           color: #a1a1aa !important;
-          border-color: #3f3f46 !important;
         }
         .dark .leaflet-control-zoom a:hover {
-          background: #3f3f46 !important;
+          background: rgba(63, 63, 70, 1) !important;
         }
         .leaflet-control-attribution {
           background: rgba(255,255,255,0.8) !important;
+          backdrop-filter: blur(4px) !important;
           font-size: 10px !important;
+          padding: 2px 8px !important;
+          border-radius: 4px !important;
+          margin: 8px !important;
         }
         .dark .leaflet-control-attribution {
           background: rgba(24,24,27,0.8) !important;
           color: #71717a !important;
+        }
+        .leaflet-control-attribution a {
+          color: #f97316 !important;
         }
       `}</style>
       <div 
