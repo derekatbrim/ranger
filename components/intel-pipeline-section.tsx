@@ -14,7 +14,7 @@ const pipelineSteps = [
   {
     step: "01",
     title: "INGEST",
-    description: "We pull from authoritative public sources — no scraping social media or unreliable feeds.",
+    description: "Police reports, court records, GIS data, planning documents — authoritative public sources only.",
     sources: [
       { icon: Radio, label: "Police Scanners" },
       { icon: Map, label: "County GIS" },
@@ -24,7 +24,7 @@ const pipelineSteps = [
   {
     step: "02",
     title: "FILTER",
-    description: "Every item is verified, deduplicated, and geolocated before it reaches you. No rumors, no duplicates.",
+    description: "Every item is verified, deduplicated, and geolocated before it reaches you.",
     sources: [
       { icon: Filter, label: "Deduplication" },
       { icon: FileText, label: "Verification" },
@@ -34,7 +34,7 @@ const pipelineSteps = [
   {
     step: "03",
     title: "ALERT",
-    description: "You get a clean, actionable briefing — not a firehose of raw data.",
+    description: "A clean, actionable briefing lands in your inbox every Sunday.",
     sources: [
       { icon: Bell, label: "Weekly Digest" },
       { icon: Map, label: "Your Radius" },
@@ -119,7 +119,7 @@ export function IntelPipelineSection() {
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">04 / The Pipeline</span>
         <h2 className="mt-4 font-[var(--font-bebas)] text-4xl md:text-7xl tracking-tight">HOW WE GET IT</h2>
         <p className="mt-4 font-mono text-sm text-muted-foreground max-w-lg">
-          No black-box AI. No social media scraping. Just verified public records, processed by humans.
+          Verified public records from authoritative sources, contextualized for your neighborhood.
         </p>
       </div>
 

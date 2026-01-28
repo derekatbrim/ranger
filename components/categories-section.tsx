@@ -2,7 +2,7 @@
 
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -16,42 +16,42 @@ const categories = [
     title: "Crime & Safety",
     description: "Arrests, incidents, court outcomes, and emerging patterns in your area.",
     examples: ["DUI checkpoints", "Vehicle break-ins", "Court dispositions"],
-    span: "md:col-span-2 md:row-span-2",
+    span: "col-span-2 row-span-2",
   },
   {
     icon: Building2,
     title: "Development",
     description: "Construction permits, zoning changes, and planning board decisions.",
     examples: ["New construction", "Rezoning requests", "Variance approvals"],
-    span: "md:col-span-1 md:row-span-1",
+    span: "col-span-1 row-span-1",
   },
   {
     icon: Vote,
     title: "Elections",
     description: "Candidates, ballot measures, polling locations, and results.",
     examples: ["Candidate filings", "Ballot measures", "Election results"],
-    span: "md:col-span-1 md:row-span-1",
+    span: "col-span-1 row-span-1",
   },
   {
     icon: AlertTriangle,
     title: "Sex Offenders",
     description: "Registry updates, relocations, and proximity alerts.",
     examples: ["New registrations", "Address changes", "School proximity"],
-    span: "md:col-span-1 md:row-span-1",
+    span: "col-span-1 row-span-1",
   },
   {
     icon: FileText,
     title: "Public Records",
     description: "Business licenses, property transfers, and government filings.",
     examples: ["Liquor licenses", "Property sales", "FOIAs"],
-    span: "md:col-span-1 md:row-span-1",
+    span: "col-span-1 row-span-1",
   },
   {
     icon: TrendingUp,
     title: "Trends",
     description: "Patterns and changes over time that matter to residents.",
     examples: ["Crime trends", "Property values", "Population shifts"],
-    span: "md:col-span-2 md:row-span-1",
+    span: "col-span-2 row-span-1",
   },
 ]
 
@@ -115,9 +115,12 @@ export function CategoriesSection() {
       </div>
 
       {/* Category grid */}
-      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-4 max-w-6xl">
+      <div
+        ref={gridRef}
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[180px] md:auto-rows-[200px] max-w-6xl"
+      >
         {categories.map((category, index) => (
-          <CategoryCard key={index} category={category} />
+          <CategoryCard key={index} category={category} index={index} />
         ))}
       </div>
     </section>
@@ -126,6 +129,7 @@ export function CategoriesSection() {
 
 function CategoryCard({
   category,
+  index,
 }: {
   category: {
     icon: React.ComponentType<{ className?: string }>
@@ -134,48 +138,93 @@ function CategoryCard({
     examples: string[]
     span: string
   }
+  index: number
 }) {
+  const [isActive, setIsActive] = useState(false)
   const Icon = category.icon
 
   return (
     <article
       className={cn(
-        "group relative border border-border/40 p-5 flex flex-col transition-all duration-300 overflow-hidden",
+        "group relative border border-border/40 p-5 flex flex-col justify-between transition-all duration-500 cursor-pointer overflow-hidden",
         category.span,
-        "hover:border-accent/60 active:border-accent/60"
+        isActive && "border-accent/60"
       )}
+      onMouseEnter={() => setIsActive(true)}
+      onMouseLeave={() => setIsActive(false)}
+      onTouchStart={() => setIsActive(true)}
+      onTouchEnd={() => setIsActive(false)}
+      onTouchCancel={() => setIsActive(false)}
     >
-      {/* Corner accent - shows on hover/touch */}
-      <div className="absolute top-0 right-0 w-12 h-12 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-300">
+      {/* Background layer */}
+      <div
+        className={cn(
+          "absolute inset-0 bg-accent/5 transition-opacity duration-500",
+          isActive ? "opacity-100" : "opacity-0"
+        )}
+      />
+
+      {/* Content */}
+      <div className="relative z-10">
+        <div className="flex items-start gap-4 mb-4">
+          <div className={cn(
+            "p-2 border transition-all duration-300",
+            isActive ? "border-accent bg-accent/10" : "border-border/40"
+          )}>
+            <Icon className={cn(
+              "w-5 h-5 transition-colors duration-300",
+              isActive ? "text-accent" : "text-muted-foreground"
+            )} />
+          </div>
+          <h3 className={cn(
+            "font-[var(--font-bebas)] text-2xl md:text-3xl tracking-tight transition-colors duration-300 pt-1",
+            isActive ? "text-accent" : "text-foreground"
+          )}>
+            {category.title}
+          </h3>
+        </div>
+      </div>
+
+      {/* Description - reveals on hover/touch */}
+      <div className="relative z-10">
+        <p className={cn(
+          "font-mono text-xs text-muted-foreground leading-relaxed transition-all duration-500 mb-4",
+          isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+        )}>
+          {category.description}
+        </p>
+
+        {/* Example tags */}
+        <div className={cn(
+          "flex flex-wrap gap-2 transition-all duration-500",
+          isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+        )}>
+          {category.examples.map((example, i) => (
+            <span
+              key={i}
+              className="font-mono text-[10px] uppercase tracking-wider px-2 py-1 bg-accent/10 text-accent border border-accent/20"
+            >
+              {example}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Index marker */}
+      <span className={cn(
+        "absolute bottom-4 right-4 font-mono text-[10px] transition-colors duration-300",
+        isActive ? "text-accent" : "text-muted-foreground/40"
+      )}>
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      {/* Corner line */}
+      <div className={cn(
+        "absolute top-0 right-0 w-12 h-12 transition-all duration-500",
+        isActive ? "opacity-100" : "opacity-0"
+      )}>
         <div className="absolute top-0 right-0 w-full h-[2px] bg-accent" />
         <div className="absolute top-0 right-0 w-[2px] h-full bg-accent" />
-      </div>
-
-      {/* Top row: icon + title */}
-      <div className="flex items-start gap-4 mb-4">
-        <div className="p-2 border border-border/40 group-hover:border-accent group-hover:bg-accent/10 group-active:border-accent group-active:bg-accent/10 transition-all duration-300">
-          <Icon className="w-5 h-5 text-muted-foreground group-hover:text-accent group-active:text-accent transition-colors duration-300" />
-        </div>
-        <h3 className="font-[var(--font-bebas)] text-2xl md:text-3xl tracking-tight group-hover:text-accent group-active:text-accent transition-colors duration-300 pt-1">
-          {category.title}
-        </h3>
-      </div>
-
-      {/* Description - always visible */}
-      <p className="font-mono text-xs text-muted-foreground leading-relaxed mb-4">
-        {category.description}
-      </p>
-
-      {/* Example tags */}
-      <div className="flex flex-wrap gap-2 mt-auto">
-        {category.examples.map((example, i) => (
-          <span
-            key={i}
-            className="font-mono text-[10px] uppercase tracking-wider px-2 py-1 bg-accent/10 text-accent border border-accent/20"
-          >
-            {example}
-          </span>
-        ))}
       </div>
     </article>
   )
