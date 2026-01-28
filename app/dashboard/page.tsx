@@ -86,7 +86,7 @@ export default function DashboardPage() {
   });
 
   // Get unique cities for filter dropdown
-  const cities = [...new Set(incidents.map(i => i.city).filter(Boolean))];
+  const cities = Array.from(new Set(incidents.map(i => i.city).filter((c): c is string => Boolean(c))));
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
