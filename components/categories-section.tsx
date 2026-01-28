@@ -117,7 +117,7 @@ export function CategoriesSection() {
       {/* Category grid */}
       <div
         ref={gridRef}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[180px] md:auto-rows-[200px] max-w-6xl"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[200px]"
       >
         {categories.map((category, index) => (
           <CategoryCard key={index} category={category} index={index} />
@@ -166,18 +166,13 @@ function CategoryCard({
 
       {/* Content */}
       <div className="relative z-10">
-        <div className="flex items-start gap-4 mb-4">
-          <div className={cn(
-            "p-2 border transition-all duration-300",
-            isActive ? "border-accent bg-accent/10" : "border-border/40"
-          )}>
-            <Icon className={cn(
-              "w-5 h-5 transition-colors duration-300",
-              isActive ? "text-accent" : "text-muted-foreground"
-            )} />
-          </div>
+        <div className="flex items-center gap-3">
+          <Icon className={cn(
+            "w-5 h-5 transition-colors duration-300",
+            isActive ? "text-accent" : "text-muted-foreground"
+          )} />
           <h3 className={cn(
-            "font-[var(--font-bebas)] text-2xl md:text-3xl tracking-tight transition-colors duration-300 pt-1",
+            "font-[var(--font-bebas)] text-2xl md:text-3xl tracking-tight transition-colors duration-300",
             isActive ? "text-accent" : "text-foreground"
           )}>
             {category.title}
@@ -185,24 +180,18 @@ function CategoryCard({
         </div>
       </div>
 
-      {/* Description - reveals on hover/touch */}
-      <div className="relative z-10">
-        <p className={cn(
-          "font-mono text-xs text-muted-foreground leading-relaxed transition-all duration-500 mb-4",
-          isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-        )}>
+      {/* Description - always visible */}
+      <div className="relative z-10 mt-auto">
+        <p className="font-mono text-xs text-muted-foreground leading-relaxed mb-3">
           {category.description}
         </p>
 
         {/* Example tags */}
-        <div className={cn(
-          "flex flex-wrap gap-2 transition-all duration-500",
-          isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-        )}>
+        <div className="flex flex-wrap gap-1">
           {category.examples.map((example, i) => (
             <span
               key={i}
-              className="font-mono text-[10px] uppercase tracking-wider px-2 py-1 bg-accent/10 text-accent border border-accent/20"
+              className="font-mono text-[9px] uppercase tracking-wider px-2 py-1 bg-accent/10 text-accent border border-accent/20"
             >
               {example}
             </span>
