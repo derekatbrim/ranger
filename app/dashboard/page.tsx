@@ -1,7 +1,7 @@
 // app/dashboard/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DashboardSidebar } from '@/components/dashboard/sidebar';
 import { DashboardMap } from '@/components/dashboard/map';
 import { StatsOverlay } from '@/components/dashboard/stats-overlay';
@@ -36,6 +36,21 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
   const [panelOpen, setPanelOpen] = useState(false);
+
+  // Set light mode for dashboard by default
+  useEffect(() => {
+    const saved = localStorage.getItem('dashboard-theme');
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
+    // Cleanup: restore dark mode when leaving dashboard
+    return () => {
+      document.documentElement.classList.add('dark');
+    };
+  }, []);
 
   const handleSelectIncident = (incident: Incident | null) => {
     setSelectedIncident(incident);

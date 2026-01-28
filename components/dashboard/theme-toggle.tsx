@@ -10,25 +10,15 @@ export function ThemeToggle() {
 
   useEffect(() => {
     setMounted(true);
-    // Check for saved preference or system preference
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Default to light mode unless explicitly set to dark
-    const shouldBeDark = saved === 'dark' || (!saved && prefersDark);
+    const saved = localStorage.getItem('dashboard-theme');
+    const shouldBeDark = saved === 'dark';
     setIsDark(shouldBeDark);
-    
-    if (shouldBeDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
   }, []);
 
   const toggle = () => {
     const newValue = !isDark;
     setIsDark(newValue);
-    localStorage.setItem('theme', newValue ? 'dark' : 'light');
+    localStorage.setItem('dashboard-theme', newValue ? 'dark' : 'light');
     
     if (newValue) {
       document.documentElement.classList.add('dark');

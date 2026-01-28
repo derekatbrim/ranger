@@ -7,7 +7,7 @@ import type { Incident } from '@/app/dashboard/page';
 interface MapProps {
   incidents: Incident[];
   selectedIncident: Incident | null;
-  onSelect: (incident: Incident | null) => void;
+  onSelect: (incident: Incident) => void;
 }
 
 const DEFAULT_CENTER: [number, number] = [42.3239, -88.4506];
@@ -102,21 +102,44 @@ export function DashboardMap({ incidents, selectedIncident, onSelect }: MapProps
       const color = getMarkerColor(incident.urgency_score);
       const isSelected = selectedIncident?.id === incident.id;
       
-      const marker = leaflet.circleMarker(
+      // Outer radar pulse circle (larger, low opacity)
+      const outerMarker = leaflet.circleMarker(
         [incident.latitude, incident.longitude],
         {
-          radius: isSelected ? 14 : 10,
+          radius: isSelected ? 24 : 18,
           fillColor: color,
-          color: isSelected ? '#000' : '#fff',
-          weight: isSelected ? 3 : 2,
+          color: 'transparent',
+          weight: 0,
+          fillOpacity: 0.15,
+          className: 'radar-pulse',
+        }
+      );
+      
+      // Inner solid circle
+      const innerMarker = leaflet.circleMarker(
+        [incident.latitude, incident.longitude],
+        {
+          radius: isSelected ? 10 : 7,
+          fillColor: color,
+          color: '#fff',
+          weight: 2,
           opacity: 1,
-          fillOpacity: 0.85,
+          fillOpacity: 0.9,
         }
       );
 
-      marker.on('click', () => onSelect(incident));
-      marker.addTo(map);
-      markersRef.current.push(marker);
+      // Click handler on inner marker
+      innerMarker.on('click', () => {
+        onSelect(incident);
+      });
+      
+      outerMarker.on('click', () => {
+        onSelect(incident);
+      });
+
+      outerMarker.addTo(map);
+      innerMarker.addTo(map);
+      markersRef.current.push(outerMarker, innerMarker);
     });
 
     // Fit bounds
@@ -149,6 +172,14 @@ export function DashboardMap({ incidents, selectedIncident, onSelect }: MapProps
         crossOrigin="anonymous"
       />
       <style jsx global>{`
+        .radar-pulse {
+          animation: radar-pulse 2s ease-out infinite;
+        }
+        @keyframes radar-pulse {
+          0% { opacity: 0.15; transform: scale(1); }
+          50% { opacity: 0.08; }
+          100% { opacity: 0.15; transform: scale(1); }
+        }
         .leaflet-control-zoom a {
           background: white !important;
           color: #44403c !important;

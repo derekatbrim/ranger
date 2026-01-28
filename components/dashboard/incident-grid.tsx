@@ -1,7 +1,8 @@
 // components/dashboard/incident-grid.tsx
 'use client';
 
-import { Shield, Radio, Newspaper } from 'lucide-react';
+import { useState } from 'react';
+import { Shield, Radio, Newspaper, MapPin, Clock, ChevronRight } from 'lucide-react';
 import type { Incident } from '@/app/dashboard/page';
 
 interface IncidentGridProps {
@@ -9,21 +10,69 @@ interface IncidentGridProps {
   onSelect: (incident: Incident) => void;
 }
 
+type FeedTab = 'all' | 'crime' | 'news';
+
+const crimeCategories = ['violent_crime', 'property_crime', 'drugs'];
+
 export function IncidentGrid({ incidents, onSelect }: IncidentGridProps) {
+  const [activeTab, setActiveTab] = useState<FeedTab>('all');
+
+  const filteredIncidents = incidents.filter(incident => {
+    if (activeTab === 'all') return true;
+    if (activeTab === 'crime') return crimeCategories.includes(incident.category);
+    if (activeTab === 'news') return !crimeCategories.includes(incident.category);
+    return true;
+  });
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-      {incidents.map((incident) => (
-        <IncidentCard 
-          key={incident.id} 
-          incident={incident} 
-          onClick={() => onSelect(incident)}
-        />
-      ))}
+    <div className="max-w-2xl">
+      {/* Tabs */}
+      <div className="flex gap-1 mb-6 border-b border-stone-200 dark:border-zinc-800">
+        {[
+          { id: 'all', label: 'All' },
+          { id: 'crime', label: 'Crime' },
+          { id: 'news', label: 'News & Alerts' },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as FeedTab)}
+            className={`
+              px-4 py-3 font-mono text-xs uppercase tracking-wider transition-colors relative
+              ${activeTab === tab.id 
+                ? 'text-orange-500' 
+                : 'text-stone-400 hover:text-stone-600 dark:hover:text-stone-300'
+              }
+            `}
+          >
+            {tab.label}
+            {activeTab === tab.id && (
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-orange-500" />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Feed */}
+      <div className="space-y-4">
+        {filteredIncidents.map((incident) => (
+          <FeedCard 
+            key={incident.id} 
+            incident={incident} 
+            onClick={() => onSelect(incident)}
+          />
+        ))}
+        
+        {filteredIncidents.length === 0 && (
+          <div className="py-12 text-center">
+            <p className="font-mono text-sm text-stone-400">No incidents in this category</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-function IncidentCard({ 
+function FeedCard({ 
   incident, 
   onClick 
 }: { 
@@ -51,70 +100,64 @@ function IncidentCard({
   return (
     <article 
       onClick={onClick}
-      className="group relative bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 cursor-pointer hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-stone-200/50 dark:hover:shadow-black/20"
+      className="group bg-white dark:bg-zinc-900 border border-stone-200 dark:border-zinc-800 p-4 cursor-pointer hover:border-stone-300 dark:hover:border-zinc-700 transition-all hover:shadow-lg hover:shadow-stone-100 dark:hover:shadow-black/10"
     >
-      {/* Top accent line */}
-      <div className={`absolute top-0 left-0 right-0 h-[2px] ${urgencyColor}`} />
-      
-      {/* Image area */}
-      <div className="aspect-[16/10] bg-gradient-to-br from-stone-50 to-stone-100 dark:from-zinc-800 dark:to-zinc-900 relative overflow-hidden">
-        {/* Placeholder pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
+      <div className="flex gap-4">
+        {/* Urgency indicator */}
+        <div className="flex-shrink-0 pt-1">
+          <div className={`w-3 h-3 rounded-full ${urgencyColor}`} />
         </div>
 
-        {/* Category badge */}
-        <div className="absolute top-3 left-3">
-          <span className="px-2 py-1 bg-white/90 dark:bg-zinc-800/90 backdrop-blur rounded font-mono text-[9px] uppercase tracking-wider text-stone-600 dark:text-stone-300">
-            {incident.category.replace('_', ' ')}
-          </span>
-        </div>
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-4 mb-2">
+            <div>
+              <h3 className="font-display text-xl tracking-tight group-hover:text-orange-500 transition-colors">
+                {incident.incident_type.replace(/_/g, ' ').toUpperCase()}
+              </h3>
+              <div className="flex items-center gap-3 mt-1">
+                {(incident.address || incident.city) && (
+                  <span className="flex items-center gap-1 text-stone-400">
+                    <MapPin className="w-3 h-3" />
+                    <span className="font-mono text-xs">
+                      {incident.city || incident.address}
+                    </span>
+                  </span>
+                )}
+                <span className="flex items-center gap-1 text-stone-400">
+                  <Clock className="w-3 h-3" />
+                  <span className="font-mono text-xs">
+                    {formatTimeAgo(incident.occurred_at)}
+                  </span>
+                </span>
+              </div>
+            </div>
+            
+            <ChevronRight className="w-5 h-5 text-stone-300 group-hover:text-orange-500 transition-colors flex-shrink-0" />
+          </div>
 
-        {/* Time badge */}
-        <div className="absolute top-3 right-3">
-          <span className="px-2 py-1 bg-white/90 dark:bg-zinc-800/90 backdrop-blur rounded font-mono text-[9px] text-stone-500">
-            {formatTimeAgo(incident.occurred_at)}
-          </span>
-        </div>
-      </div>
-
-      <div className="p-4">
-        {/* Title */}
-        <h3 className="font-display text-xl tracking-tight mb-2 group-hover:text-orange-500 transition-colors">
-          {incident.incident_type.replace(/_/g, ' ').toUpperCase()}
-        </h3>
-
-        {/* Location */}
-        {(incident.address || incident.city) && (
-          <p className="font-mono text-xs text-stone-500 dark:text-stone-400 mb-3">
-            {incident.address}{incident.address && incident.city ? ' · ' : ''}{incident.city}
+          {/* Description */}
+          <p className="font-mono text-sm text-stone-600 dark:text-stone-400 mb-3 line-clamp-2">
+            {incident.description}
           </p>
-        )}
 
-        {/* Description */}
-        <p className="font-mono text-xs text-stone-600 dark:text-stone-400 line-clamp-2 mb-4">
-          {incident.description}
-        </p>
-
-        {/* Source badges */}
-        <div className="flex items-center gap-2 pt-3 border-t border-stone-100 dark:border-zinc-800">
-          {incident.source_types.map((type) => (
-            <span 
-              key={type}
-              className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-wider px-2 py-1 bg-stone-100 dark:bg-zinc-800 text-stone-500 dark:text-stone-400 rounded"
-            >
-              {sourceIcons[type]}
-              {sourceLabels[type] || type}
+          {/* Source badges */}
+          <div className="flex items-center gap-2">
+            {incident.source_types.map((type) => (
+              <span 
+                key={type}
+                className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-wider px-2 py-1 bg-stone-100 dark:bg-zinc-800 text-stone-500 dark:text-stone-400 rounded"
+              >
+                {sourceIcons[type]}
+                {sourceLabels[type] || type}
+              </span>
+            ))}
+            
+            <span className="font-mono text-[10px] uppercase tracking-wider text-stone-400 ml-auto">
+              {incident.category.replace('_', ' ')}
             </span>
-          ))}
-          
-          {incident.report_count > 1 && (
-            <span className="ml-auto font-mono text-[10px] text-stone-400">
-              {incident.report_count} reports
-            </span>
-          )}
+          </div>
         </div>
       </div>
     </article>
