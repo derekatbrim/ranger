@@ -8,32 +8,35 @@
     "start": "next start",
     "lint": "next lint",
     "ingest:rss": "node data/scripts/ingest-rss-supabase.js",
+    "ingest:crime": "node data/scripts/ingest-arcgis-crime.js",
+    "test:arcgis": "node data/scripts/test-arcgis.js",
     "rollup:weekly": "node data/scripts/weekly-rollup-supabase.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
-    "@tailwindcss/postcss": "^4.1.18",
-    "clsx": "^2.1.0",
-    "date-fns": "^3.6.0",
-    "dotenv": "^16.4.0",
-    "framer-motion": "^11.0.0",
-    "gsap": "^3.12.5",
-    "lenis": "^1.1.0",
-    "lucide-react": "^0.400.0",
     "next": "^14.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "gsap": "^3.12.5",
+    "framer-motion": "^11.0.0",
+    "lenis": "^1.1.0",
+    "lucide-react": "^0.400.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.2.0",
+    "@supabase/supabase-js": "^2.39.0",
     "rss-parser": "^3.13.0",
-    "tailwind-merge": "^2.2.0"
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.0",
+    "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@types/leaflet": "^1.9.8",
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.0",
     "tailwindcss": "^4.0.0",
-    "tw-animate-css": "^1.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "tw-animate-css": "^1.0.0"
   }
 }
