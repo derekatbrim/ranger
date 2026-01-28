@@ -1,0 +1,243 @@
+{
+  "_location": "data/sources.json",
+  "sources": [
+    {
+      "name": "Northwest Herald",
+      "type": "rss",
+      "category": "news",
+      "url": "https://www.shawlocal.com/northwest-herald/rss.xml",
+      "municipality": null,
+      "enabled": true,
+      "notes": "Shaw Local's McHenry County paper - main local news source"
+    },
+    {
+      "name": "Northwest Herald - Local News",
+      "type": "rss", 
+      "category": "news",
+      "url": "https://www.shawlocal.com/northwest-herald/news/local/rss.xml",
+      "municipality": null,
+      "enabled": true,
+      "notes": "Local news section specifically"
+    },
+    {
+      "name": "Patch - Crystal Lake",
+      "type": "rss",
+      "category": "news",
+      "url": "https://patch.com/illinois/crystallake/rss.xml",
+      "municipality": "Crystal Lake",
+      "enabled": true,
+      "notes": "Patch uses standard /rss.xml pattern"
+    },
+    {
+      "name": "Patch - McHenry",
+      "type": "rss",
+      "category": "news",
+      "url": "https://patch.com/illinois/mchenry/rss.xml",
+      "municipality": "McHenry",
+      "enabled": true,
+      "notes": "McHenry Patch feed"
+    },
+    {
+      "name": "Patch - Huntley",
+      "type": "rss",
+      "category": "news",
+      "url": "https://patch.com/illinois/huntley/rss.xml",
+      "municipality": "Huntley",
+      "enabled": true,
+      "notes": "Huntley Patch feed"
+    },
+    {
+      "name": "Patch - Woodstock-Lake Geneva",
+      "type": "rss",
+      "category": "news",
+      "url": "https://patch.com/illinois/woodstock/rss.xml",
+      "municipality": "Woodstock",
+      "enabled": true,
+      "notes": "Woodstock area Patch feed"
+    },
+    {
+      "name": "SpotCrime - McHenry County",
+      "type": "api",
+      "category": "crime",
+      "url": "https://spotcrime.com/il/mchenry+county",
+      "municipality": null,
+      "enabled": true,
+      "notes": "SpotCrime aggregates police reports. May need to scrape or use email alerts."
+    },
+    {
+      "name": "CrimeMapping - McHenry County",
+      "type": "api",
+      "category": "crime",
+      "url": "https://www.crimemapping.com/map/il/mchenrycounty",
+      "municipality": null,
+      "enabled": false,
+      "notes": "Check if McHenry County participates. If so, has better structured data."
+    },
+    {
+      "name": "Lake McHenry Scanner",
+      "type": "scrape",
+      "category": "crime",
+      "url": "https://www.facebook.com/lakemchenryscanner",
+      "municipality": null,
+      "enabled": false,
+      "notes": "Facebook public page - would need to monitor for posts. Lower priority."
+    },
+    {
+      "name": "Daily Herald - Crystal Lake",
+      "type": "rss",
+      "category": "news",
+      "url": "https://www.dailyherald.com/rss/crystal-lake/",
+      "municipality": "Crystal Lake",
+      "enabled": true,
+      "notes": "Daily Herald covers McHenry County as part of NW suburbs"
+    }
+  ],
+  "municipalities": [
+    "Crystal Lake",
+    "McHenry",
+    "Woodstock",
+    "Huntley",
+    "Cary",
+    "Lake in the Hills",
+    "Algonquin",
+    "Marengo",
+    "Harvard",
+    "Richmond",
+    "Johnsburg",
+    "Fox River Grove",
+    "Bull Valley",
+    "Lakewood",
+    "Island Lake",
+    "Wonder Lake",
+    "Hebron",
+    "Spring Grove",
+    "Ringwood",
+    "Greenwood",
+    "Union",
+    "Prairie Grove",
+    "McCullom Lake",
+    "Oakwood Hills",
+    "Holiday Hills",
+    "Lakemoor",
+    "Port Barrington"
+  ],
+  "incident_categories": [
+    {
+      "id": "vehicle_breakin",
+      "label": "Vehicle Break-in",
+      "keywords": ["vehicle break-in", "car break-in", "theft from vehicle", "smash and grab"]
+    },
+    {
+      "id": "theft",
+      "label": "Theft",
+      "keywords": ["theft", "stealing", "stolen", "shoplifting", "retail theft"]
+    },
+    {
+      "id": "burglary",
+      "label": "Burglary",
+      "keywords": ["burglary", "break-in", "home invasion", "residential burglary"]
+    },
+    {
+      "id": "robbery",
+      "label": "Robbery",
+      "keywords": ["robbery", "armed robbery", "mugging", "holdup"]
+    },
+    {
+      "id": "assault",
+      "label": "Assault",
+      "keywords": ["assault", "battery", "attack", "aggravated assault", "domestic battery"]
+    },
+    {
+      "id": "shots_fired",
+      "label": "Shots Fired",
+      "keywords": ["shots fired", "shooting", "gunshot", "gunfire"]
+    },
+    {
+      "id": "fire",
+      "label": "Fire",
+      "keywords": ["fire", "arson", "structure fire", "house fire", "building fire"]
+    },
+    {
+      "id": "traffic",
+      "label": "Traffic Incident",
+      "keywords": ["crash", "accident", "dui", "drunk driving", "hit and run", "traffic"]
+    },
+    {
+      "id": "drugs",
+      "label": "Drug-Related",
+      "keywords": ["drugs", "narcotics", "possession", "dealing", "overdose"]
+    },
+    {
+      "id": "fraud",
+      "label": "Fraud/Scam",
+      "keywords": ["fraud", "scam", "identity theft", "forgery", "counterfeit"]
+    },
+    {
+      "id": "vandalism",
+      "label": "Vandalism",
+      "keywords": ["vandalism", "graffiti", "criminal damage", "property damage"]
+    },
+    {
+      "id": "missing",
+      "label": "Missing Person",
+      "keywords": ["missing", "endangered", "silver alert", "amber alert"]
+    },
+    {
+      "id": "suspicious",
+      "label": "Suspicious Activity",
+      "keywords": ["suspicious", "prowler", "trespassing"]
+    },
+    {
+      "id": "other",
+      "label": "Other",
+      "keywords": []
+    }
+  ],
+  "news_categories": [
+    {
+      "id": "crime",
+      "label": "Crime & Safety",
+      "keywords": ["arrest", "charged", "police", "sheriff", "court", "jail", "prison", "crime", "criminal"]
+    },
+    {
+      "id": "business",
+      "label": "Business",
+      "keywords": ["opening", "closing", "restaurant", "store", "business", "company", "jobs", "hiring", "development"]
+    },
+    {
+      "id": "government",
+      "label": "Government & Politics",
+      "keywords": ["council", "board", "mayor", "election", "vote", "tax", "budget", "zoning", "permit"]
+    },
+    {
+      "id": "education",
+      "label": "Education",
+      "keywords": ["school", "district", "teacher", "student", "college", "university", "graduation"]
+    },
+    {
+      "id": "community",
+      "label": "Community",
+      "keywords": ["event", "festival", "parade", "volunteer", "nonprofit", "charity", "church"]
+    },
+    {
+      "id": "sports",
+      "label": "Sports",
+      "keywords": ["football", "basketball", "baseball", "soccer", "hockey", "sports", "team", "coach", "game"]
+    },
+    {
+      "id": "weather",
+      "label": "Weather & Environment",
+      "keywords": ["weather", "storm", "flood", "tornado", "snow", "ice", "environment", "pollution"]
+    },
+    {
+      "id": "real_estate",
+      "label": "Real Estate & Development",
+      "keywords": ["real estate", "housing", "apartment", "construction", "building", "development", "subdivision"]
+    },
+    {
+      "id": "other",
+      "label": "Other",
+      "keywords": []
+    }
+  ]
+}
