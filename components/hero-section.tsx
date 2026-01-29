@@ -82,7 +82,7 @@ export function HeroSection() {
         <div ref={locationRef} className="flex items-center gap-2 mb-6 opacity-0">
           <MapPin className="w-4 h-4 text-accent" />
           <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            Now covering McHenry County, IL
+            Launching in 4 counties
           </span>
         </div>
 
@@ -97,8 +97,8 @@ export function HeroSection() {
             Local intelligence for the modern neighbor.
           </p>
           <p className="font-mono text-sm text-muted-foreground mt-4 max-w-lg leading-relaxed">
-            Crime, development, elections, and more — synthesized into a weekly briefing 
-            so you actually know what's happening in your county.
+            Crime, development, civic records, and more — synthesized into a calm, 
+            verified briefing so you actually know what's happening in your county.
           </p>
         </div>
 
@@ -117,12 +117,12 @@ export function HeroSection() {
               type="submit"
               className="group flex items-center justify-center gap-2 bg-accent text-accent-foreground px-6 py-3 font-mono text-sm uppercase tracking-wider hover:bg-accent/90 transition-colors cursor-pointer"
             >
-              Join Waitlist
+              Become a Founding Member
               <BitmapChevron className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
           </form>
           <p className="font-mono text-[10px] text-muted-foreground mt-4 uppercase tracking-wider">
-            Free weekly digest • No spam • Unsubscribe anytime
+            Get your first briefing free • No spam • Unsubscribe anytime
           </p>
         </div>
       </div>

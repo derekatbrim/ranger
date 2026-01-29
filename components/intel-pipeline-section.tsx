@@ -6,7 +6,7 @@ import { useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Radio, Map, FileText, Filter, Bell, ChevronRight } from "lucide-react"
+import { Radio, Map, FileText, Filter, ChevronRight } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -47,7 +47,6 @@ export function IntelPipelineSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const stepsRef = useRef<HTMLDivElement>(null)
-  const exampleRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!sectionRef.current || !headerRef.current || !stepsRef.current) return
@@ -88,25 +87,6 @@ export function IntelPipelineSection() {
           }
         )
       }
-
-      if (exampleRef.current) {
-        gsap.fromTo(
-          exampleRef.current,
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            delay: 0.6,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: exampleRef.current,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        )
-      }
     }, sectionRef)
 
     return () => ctx.revert()
@@ -124,7 +104,7 @@ export function IntelPipelineSection() {
       </div>
 
       {/* Pipeline steps */}
-      <div ref={stepsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 mb-12 md:mb-16">
+      <div ref={stepsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4">
         {pipelineSteps.map((step, index) => (
           <div key={step.step} className="pipeline-step relative">
             {/* Connector arrow - desktop only */}
@@ -179,59 +159,6 @@ export function IntelPipelineSection() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Example outputs */}
-      <div ref={exampleRef} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
-        {/* Crime alert */}
-        <div className="relative bg-card border border-accent/30 p-6">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-accent" />
-          
-          <div className="flex items-center gap-2 mb-4">
-            <Bell className="w-4 h-4 text-accent" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
-              Crime Alert
-            </span>
-          </div>
-
-          <h4 className="font-[var(--font-bebas)] text-2xl tracking-tight mb-2">
-            Vehicle Break-in Pattern Identified
-          </h4>
-
-          <p className="font-mono text-xs text-muted-foreground leading-relaxed">
-            7 vehicle break-ins reported in Crystal Lake between Jan 20-26, clustered around Main St corridor between 11pm-3am. 
-            Unlocked vehicles targeted. CLPD increasing overnight patrols. 2 suspects arrested Jan 25.
-          </p>
-
-          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border/30">
-            <span className="font-mono text-[10px] text-muted-foreground/60">Source: CLPD Press Release + Scanner Reports</span>
-          </div>
-        </div>
-
-        {/* Property tax alert */}
-        <div className="relative bg-card border border-border/30 p-6">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-border/50" />
-          
-          <div className="flex items-center gap-2 mb-4">
-            <Bell className="w-4 h-4 text-muted-foreground" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              Zoning Alert
-            </span>
-          </div>
-
-          <h4 className="font-[var(--font-bebas)] text-2xl tracking-tight mb-2">
-            Rezoning May Affect Property Taxes
-          </h4>
-
-          <p className="font-mono text-xs text-muted-foreground leading-relaxed">
-            12 acres rezoned from R-1 to B-2 at Route 14 & Main. 
-            Properties within 500ft may see reassessment. Appeal window closes March 15.
-          </p>
-
-          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border/30">
-            <span className="font-mono text-[10px] text-muted-foreground/60">Source: County Assessor + Planning Board</span>
-          </div>
-        </div>
       </div>
     </section>
   )
