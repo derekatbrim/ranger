@@ -49,7 +49,7 @@ const categories = [
   {
     icon: TrendingUp,
     title: "Trends",
-    description: "Patterns and changes over time — because a single incident is noise, but a pattern is signal.",
+    description: "See how your neighborhood is changing. Is crime going up or down? Are break-ins clustered on your block? Know before it affects you.",
     examples: ["Crime trends", "Property values", "Growth patterns"],
     size: "wide" as const,
   },

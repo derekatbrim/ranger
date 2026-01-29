@@ -107,8 +107,8 @@ export function CoverageSection() {
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">03 / Launch Markets</span>
         <h2 className="mt-4 font-[var(--font-bebas)] text-4xl md:text-7xl tracking-tight">WHERE WE'RE STARTING</h2>
         <p className="mt-4 font-mono text-sm text-muted-foreground max-w-lg">
-          Four counties with strong open data infrastructure but fragmented delivery. 
-          We're fixing that.
+          Over 10 million residents across four major metro areas. 
+          A lot happens every day — we help you keep up.
         </p>
       </div>
 
@@ -163,14 +163,17 @@ export function CoverageSection() {
             </div>
 
             {/* Expansion note */}
-            <div className="border border-border/40 p-5">
-              <h4 className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent mb-3">
+            <a 
+              href="/request-coverage" 
+              className="block border border-border/40 p-5 hover:border-accent/50 transition-colors group"
+            >
+              <h4 className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent mb-2">
                 Not in these counties?
               </h4>
-              <p className="font-mono text-xs text-muted-foreground leading-relaxed">
-                We're expanding based on demand. Become a Founding Member and tell us where you live.
+              <p className="font-mono text-xs text-muted-foreground leading-relaxed group-hover:text-foreground/70 transition-colors">
+                Request coverage in your area →
               </p>
-            </div>
+            </a>
           </div>
 
           {/* Right - Municipalities list */}
