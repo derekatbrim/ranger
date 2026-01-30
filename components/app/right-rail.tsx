@@ -26,7 +26,7 @@ const todaysNews = [
 
 export function RightRail() {
   return (
-    <div className="w-[380px] h-full flex flex-col border-l border-gray-200 hidden lg:flex bg-white">
+    <div className="w-[380px] h-full overflow-hidden flex flex-col border-l border-gray-200 hidden lg:flex bg-white">
       {/* Fixed search area */}
       <div className="flex-shrink-0 p-4 bg-white">
         {/* Search - rounded corners */}
@@ -41,7 +41,7 @@ export function RightRail() {
       </div>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-4 pb-4 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto px-4 pb-4 scrollbar-light">
 
       {/* Stability Overview Card */}
       <div className="bg-gray-50 rounded-xl p-5 mb-4">

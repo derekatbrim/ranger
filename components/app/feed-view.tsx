@@ -99,9 +99,9 @@ export function FeedView({ incidents, onIncidentSelect, selectedIncident }: Feed
       })
 
   return (
-    <div className="w-[600px] border-x border-gray-200 flex flex-col" style={{ height: '100%', maxHeight: '100vh' }}>
+    <div className="w-[600px] border-x border-gray-200 h-full overflow-hidden flex flex-col">
       {/* Fixed Header */}
-      <div className="flex-shrink-0 bg-white border-b border-gray-200">
+      <div className="shrink-0 bg-white border-b border-gray-200">
         {/* Title bar with orbit picker */}
         <div className="px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -176,11 +176,11 @@ export function FeedView({ incidents, onIncidentSelect, selectedIncident }: Feed
       </div>
 
       {/* Scrollable Feed */}
-      <div className="flex-1 overflow-y-auto" style={{ overflowY: 'auto' }}>
+      <div className="flex-1 overflow-y-auto scrollbar-light">
         {/* The Pulse - AI Summary */}
         <div className="p-4 border-b border-gray-100 bg-gray-50/50">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
               <Activity className="w-5 h-5 text-gray-600" />
             </div>
             <div className="flex-1">

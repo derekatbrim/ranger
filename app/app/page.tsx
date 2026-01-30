@@ -13,8 +13,8 @@ export default function AppPage() {
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null)
 
   return (
-    <div className="h-screen bg-white overflow-hidden">
-      <div className="mx-auto max-w-[1400px] flex h-full min-h-0">
+    <div className="h-screen bg-white flex overflow-hidden">
+      <div className="mx-auto max-w-[1400px] flex w-full h-full">
         {/* Left Navigation */}
         <LeftNav 
           currentView={currentView} 
@@ -22,54 +22,52 @@ export default function AppPage() {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 flex min-h-0 overflow-hidden">
-          {currentView === "pulse" && (
-            <div className="flex-1 flex min-h-0 overflow-hidden">
-              <FeedView 
-                incidents={MOCK_INCIDENTS}
-                onIncidentSelect={setSelectedIncident}
-                selectedIncident={selectedIncident}
-              />
-              <RightRail />
-            </div>
-          )}
-
-          {currentView === "map" && (
-            <MapPageView 
+        {currentView === "pulse" && (
+          <>
+            <FeedView 
               incidents={MOCK_INCIDENTS}
               onIncidentSelect={setSelectedIncident}
               selectedIncident={selectedIncident}
             />
-          )}
+            <RightRail />
+          </>
+        )}
 
-          {currentView === "forecast" && (
-            <div className="flex-1 border-x border-gray-200 bg-white p-8">
-              <h1 className="text-xl font-bold">Forecast</h1>
-              <p className="text-gray-500 mt-2">Trajectory modeling coming soon</p>
-            </div>
-          )}
+        {currentView === "map" && (
+          <MapPageView 
+            incidents={MOCK_INCIDENTS}
+            onIncidentSelect={setSelectedIncident}
+            selectedIncident={selectedIncident}
+          />
+        )}
 
-          {currentView === "alerts" && (
-            <div className="flex-1 border-x border-gray-200 bg-white p-8">
-              <h1 className="text-xl font-bold">Alerts</h1>
-              <p className="text-gray-500 mt-2">Coming soon</p>
-            </div>
-          )}
+        {currentView === "forecast" && (
+          <div className="flex-1 border-x border-gray-200 bg-white p-8">
+            <h1 className="text-xl font-bold">Forecast</h1>
+            <p className="text-gray-500 mt-2">Trajectory modeling coming soon</p>
+          </div>
+        )}
 
-          {currentView === "watchlist" && (
-            <div className="flex-1 border-x border-gray-200 bg-white p-8">
-              <h1 className="text-xl font-bold">Watchlist</h1>
-              <p className="text-gray-500 mt-2">Coming soon</p>
-            </div>
-          )}
+        {currentView === "alerts" && (
+          <div className="flex-1 border-x border-gray-200 bg-white p-8">
+            <h1 className="text-xl font-bold">Alerts</h1>
+            <p className="text-gray-500 mt-2">Coming soon</p>
+          </div>
+        )}
 
-          {currentView === "profile" && (
-            <div className="flex-1 border-x border-gray-200 bg-white p-8">
-              <h1 className="text-xl font-bold">Profile</h1>
-              <p className="text-gray-500 mt-2">Coming soon</p>
-            </div>
-          )}
-        </main>
+        {currentView === "watchlist" && (
+          <div className="flex-1 border-x border-gray-200 bg-white p-8">
+            <h1 className="text-xl font-bold">Watchlist</h1>
+            <p className="text-gray-500 mt-2">Coming soon</p>
+          </div>
+        )}
+
+        {currentView === "profile" && (
+          <div className="flex-1 border-x border-gray-200 bg-white p-8">
+            <h1 className="text-xl font-bold">Profile</h1>
+            <p className="text-gray-500 mt-2">Coming soon</p>
+          </div>
+        )}
       </div>
     </div>
   )
