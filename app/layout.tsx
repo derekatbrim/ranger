@@ -18,7 +18,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 const bebasNeue = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-bebas" })
 
 export const metadata: Metadata = {
-  title: "Ranger — Local Intelligence for the Modern Neighbor",
+  title: "Raven — Local Intelligence for the Modern Neighbor",
   description:
     "Know what's happening in your county. Crime, development, elections, and more — synthesized weekly.",
   icons: {

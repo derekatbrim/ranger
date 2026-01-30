@@ -142,7 +142,7 @@ export function SideNav() {
         <div className="relative z-[105] h-full flex flex-col justify-center px-8">
           {/* Brand */}
           <div className="absolute top-8 left-8">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">Ranger</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">Raven</span>
           </div>
 
           {/* Navigation items */}

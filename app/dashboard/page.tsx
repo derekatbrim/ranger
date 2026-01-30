@@ -85,7 +85,7 @@ export default function DashboardPage() {
         <header className="absolute top-0 left-0 right-0 z-40 px-6 py-4 flex items-center justify-between pointer-events-none">
           <div className="flex items-center gap-3 pointer-events-auto">
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-orange-500">
-              Ranger
+              Raven
             </span>
             <span className="text-stone-300 dark:text-stone-700">—</span>
             <div className="flex items-center gap-1.5">

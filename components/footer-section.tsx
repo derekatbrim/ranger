@@ -58,7 +58,7 @@ export function FooterSection() {
             KNOW YOUR COUNTY
           </h2>
           <p className="mt-6 font-mono text-sm text-muted-foreground leading-relaxed max-w-lg">
-            Join the waitlist for early access to Ranger. Be the first to get weekly intelligence 
+            Join the waitlist for early access to Raven. Be the first to get weekly intelligence 
             briefings for McHenry County.
           </p>
 
@@ -138,7 +138,7 @@ export function FooterSection() {
         {/* Bottom copyright */}
         <div className="pt-8 border-t border-border/20 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
-            © 2026 Ranger. All rights reserved.
+            © 2026 Raven. All rights reserved.
           </p>
           <p className="font-mono text-[10px] text-muted-foreground">
             Local intelligence for the modern neighbor.

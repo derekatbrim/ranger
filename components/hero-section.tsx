@@ -67,7 +67,7 @@ export function HeroSection() {
       <div className="absolute top-8 left-6 md:left-28 right-6 md:right-12 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
-            Ranger
+            Raven
           </span>
           <span className="text-muted-foreground/40 hidden sm:inline">—</span>
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hidden sm:inline">
