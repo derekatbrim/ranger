@@ -13,7 +13,7 @@ export default function AppPage() {
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null)
 
   return (
-    <div className="h-screen bg-white flex overflow-hidden">
+    <div className="h-screen bg-white flex">
       <div className="mx-auto max-w-[1400px] flex w-full h-full">
         {/* Left Navigation */}
         <LeftNav 
