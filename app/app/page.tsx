@@ -14,7 +14,7 @@ export default function AppPage() {
 
   return (
     <div className="h-screen bg-white overflow-hidden">
-      <div className="mx-auto max-w-[1400px] flex h-full">
+      <div className="mx-auto max-w-[1400px] flex h-full min-h-0">
         {/* Left Navigation */}
         <LeftNav 
           currentView={currentView} 
@@ -22,16 +22,16 @@ export default function AppPage() {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 flex h-full overflow-hidden">
+        <main className="flex-1 flex min-h-0 overflow-hidden">
           {currentView === "pulse" && (
-            <>
+            <div className="flex-1 flex min-h-0 overflow-hidden">
               <FeedView 
                 incidents={MOCK_INCIDENTS}
                 onIncidentSelect={setSelectedIncident}
                 selectedIncident={selectedIncident}
               />
               <RightRail />
-            </>
+            </div>
           )}
 
           {currentView === "map" && (

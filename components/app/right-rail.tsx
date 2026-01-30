@@ -26,7 +26,7 @@ const todaysNews = [
 
 export function RightRail() {
   return (
-    <div className="w-[380px] h-screen flex flex-col border-l border-gray-200 hidden lg:flex bg-white">
+    <div className="w-[380px] h-full flex flex-col border-l border-gray-200 hidden lg:flex bg-white">
       {/* Fixed search area */}
       <div className="flex-shrink-0 p-4 bg-white">
         {/* Search - rounded corners */}

@@ -3,7 +3,7 @@
 
 import { cn } from "@/lib/utils"
 import { 
-  Radio,
+  Activity,
   Map, 
   TrendingUp,
   Bell, 
@@ -19,7 +19,7 @@ interface LeftNavProps {
 }
 
 const navItems = [
-  { id: "pulse" as ViewType, icon: Radio, label: "Pulse" },
+  { id: "pulse" as ViewType, icon: Activity, label: "Pulse" },
   { id: "map" as ViewType, icon: Map, label: "Map" },
   { id: "forecast" as ViewType, icon: TrendingUp, label: "Forecast" },
   { id: "alerts" as ViewType, icon: Bell, label: "Alerts" },
