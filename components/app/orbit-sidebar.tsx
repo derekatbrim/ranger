@@ -2,6 +2,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { 
   ORBIT_LOCATIONS, 
   type LocationData,
@@ -161,10 +162,13 @@ export function OrbitSidebar({
                   <PanelLeftClose className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
                 )
               ) : (
-                // Text logo fallback - drop your logo at /public/images/raven-logo.png
-                <span className="font-mono text-sm uppercase tracking-wider text-accent font-semibold">
-                  R
-                </span>
+                <Image 
+                  src="/images/raven-logo.png" 
+                  alt="Raven" 
+                  width={28} 
+                  height={28}
+                  className="object-contain"
+                />
               )}
             </button>
             {!collapsed && (
