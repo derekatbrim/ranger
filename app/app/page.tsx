@@ -7,7 +7,7 @@ import { OrbitSidebar } from "@/components/app/orbit-sidebar"
 import { MapPageView } from "@/components/app/map-page-view"
 import { MOCK_INCIDENTS, type Incident } from "@/lib/mock-data"
 import { ORBIT_LOCATIONS, getScoreColor } from "@/lib/raven-data"
-import { Menu, X, ChevronDown, Bell, User, MapPin, Compass, Clock, Settings, HelpCircle } from "lucide-react"
+import { Menu, X, ChevronDown, Bell, User, MapPin, Compass, Clock, Settings, HelpCircle, Plus } from "lucide-react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 
@@ -32,10 +32,9 @@ export default function AppPage() {
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [orbitDropdownOpen, setOrbitDropdownOpen] = useState(false)
+  const [orbitDropdownOpen, setOrbitDropdownOpen] = useState(true)
 
   const selectedLocation = ORBIT_LOCATIONS.find(l => l.id === selectedLocationId)
-  const scoreColor = selectedLocation ? getScoreColor(selectedLocation.stabilityScore) : "sky"
 
   return (
     <div className="h-full flex flex-col lg:flex-row overflow-hidden bg-background">
@@ -99,66 +98,77 @@ export default function AppPage() {
             )}
             style={{ transitionDelay: mobileMenuOpen ? "100ms" : "0ms" }}
           >
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2 block">
-              Current Location
-            </span>
             <button
               onClick={() => setOrbitDropdownOpen(!orbitDropdownOpen)}
-              className="w-full flex items-center justify-between p-4 bg-muted/30 border border-border rounded-lg"
+              className="w-full flex items-center justify-between mb-3"
             >
-              <div className="flex items-center gap-3">
-                <div className={cn(
-                  "w-3 h-3 rounded-full",
-                  scoreColor === "emerald" && "bg-emerald-500",
-                  scoreColor === "sky" && "bg-sky-500",
-                  scoreColor === "amber" && "bg-amber-500",
-                  scoreColor === "rose" && "bg-rose-500"
-                )} />
-                <div className="text-left">
-                  <p className="font-medium text-foreground">{selectedLocation?.name}</p>
-                  <p className="font-mono text-[10px] text-muted-foreground">{selectedLocation?.label}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-light text-foreground">{selectedLocation?.stabilityScore}</span>
-                <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform", orbitDropdownOpen && "rotate-180")} />
-              </div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
+                Your Orbit
+              </span>
+              <ChevronDown className={cn(
+                "w-4 h-4 text-muted-foreground transition-transform", 
+                orbitDropdownOpen && "rotate-180"
+              )} />
             </button>
             
-            {/* Orbit Dropdown */}
+            {/* Orbit Cards - Condensed weather style */}
             {orbitDropdownOpen && (
-              <div className="mt-2 border border-border rounded-lg overflow-hidden bg-card">
-                {ORBIT_LOCATIONS.map((location) => {
+              <div className="space-y-2">
+                {ORBIT_LOCATIONS.map((location, index) => {
                   const locScoreColor = getScoreColor(location.stabilityScore)
+                  const cardSchemes: Record<string, string> = {
+                    emerald: "from-emerald-800 via-emerald-900 to-slate-900",
+                    sky: "from-slate-700 via-slate-800 to-slate-900",
+                    amber: "from-amber-800 via-amber-900 to-slate-900",
+                    rose: "from-rose-800 via-rose-900 to-slate-900"
+                  }
+                  const isSelected = location.id === selectedLocationId
+                  
                   return (
                     <button
                       key={location.id}
                       onClick={() => {
                         setSelectedLocationId(location.id)
                         setOrbitDropdownOpen(false)
+                        setMobileMenuOpen(false)
                       }}
                       className={cn(
-                        "w-full flex items-center justify-between p-3 hover:bg-muted/50 transition-colors border-b border-border last:border-b-0",
-                        location.id === selectedLocationId && "bg-accent/10"
+                        "w-full text-left rounded-xl overflow-hidden transition-all",
+                        isSelected && "ring-2 ring-white/30"
                       )}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className={cn(
-                          "w-2 h-2 rounded-full",
-                          locScoreColor === "emerald" && "bg-emerald-500",
-                          locScoreColor === "sky" && "bg-sky-500",
-                          locScoreColor === "amber" && "bg-amber-500",
-                          locScoreColor === "rose" && "bg-rose-500"
-                        )} />
-                        <div className="text-left">
-                          <p className="font-medium text-foreground text-sm">{location.name}</p>
-                          <p className="font-mono text-[10px] text-muted-foreground">{location.label}</p>
+                      <div className={`relative bg-gradient-to-br ${cardSchemes[locScoreColor]} p-3`}>
+                        {/* Stars pattern */}
+                        <div className="absolute inset-0 opacity-30">
+                          <div className="absolute top-2 right-6 w-0.5 h-0.5 bg-white/60 rounded-full" />
+                          <div className="absolute top-4 right-3 w-0.5 h-0.5 bg-white/40 rounded-full" />
+                          <div className="absolute bottom-3 right-10 w-0.5 h-0.5 bg-white/50 rounded-full" />
+                        </div>
+                        
+                        <div className="relative flex items-center justify-between">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold text-white text-sm truncate">{location.name}</h3>
+                              {location.label && (
+                                <span className="text-white/40 text-xs">• {location.label}</span>
+                              )}
+                            </div>
+                            <p className="text-white/60 text-xs mt-0.5 truncate">{location.briefStatus}</p>
+                          </div>
+                          <div className="text-right flex-shrink-0 ml-3">
+                            <span className="text-2xl font-light text-white">{location.stabilityScore}</span>
+                          </div>
                         </div>
                       </div>
-                      <span className="text-lg font-light text-foreground">{location.stabilityScore}</span>
                     </button>
                   )
                 })}
+                
+                {/* Add Location */}
+                <button className="w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-border text-muted-foreground">
+                  <Plus className="w-4 h-4" />
+                  <span className="text-sm">Add Location</span>
+                </button>
               </div>
             )}
           </div>
