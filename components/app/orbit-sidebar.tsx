@@ -18,27 +18,23 @@ import {
   Settings
 } from "lucide-react"
 
-// Pastel color schemes for location cards
-const pastelSchemes: Record<ScoreColorType, { bg: string; accent: string; text: string }> = {
+// Color schemes for location cards - darker, more depth like Weather app
+const cardSchemes: Record<ScoreColorType, { bg: string; overlay: string }> = {
   emerald: { 
-    bg: "from-emerald-100/80 to-emerald-50/60", 
-    accent: "text-emerald-700",
-    text: "text-emerald-900"
+    bg: "from-emerald-800 via-emerald-900 to-slate-900", 
+    overlay: "bg-emerald-500/10"
   },
   sky: { 
-    bg: "from-sky-100/80 to-sky-50/60", 
-    accent: "text-sky-700",
-    text: "text-sky-900"
+    bg: "from-slate-700 via-slate-800 to-slate-900", 
+    overlay: "bg-sky-500/10"
   },
   amber: { 
-    bg: "from-amber-100/80 to-amber-50/60", 
-    accent: "text-amber-700",
-    text: "text-amber-900"
+    bg: "from-amber-800 via-amber-900 to-slate-900", 
+    overlay: "bg-amber-500/10"
   },
   rose: { 
-    bg: "from-rose-100/80 to-rose-50/60", 
-    accent: "text-rose-700",
-    text: "text-rose-900"
+    bg: "from-rose-800 via-rose-900 to-slate-900", 
+    overlay: "bg-rose-500/10"
   }
 }
 
@@ -52,7 +48,7 @@ function LocationCard({
   onClick: () => void
 }) {
   const scoreColor = getScoreColor(location.stabilityScore)
-  const scheme = pastelSchemes[scoreColor]
+  const scheme = cardSchemes[scoreColor]
   
   const TrendIcon = location.trend === "improving" 
     ? TrendingUp 
@@ -61,58 +57,65 @@ function LocationCard({
     : Minus
     
   const trendColor = location.trend === "improving" 
-    ? "text-emerald-600"
+    ? "text-emerald-400"
     : location.trend === "declining"
-    ? "text-rose-600"
-    : "text-slate-500"
+    ? "text-rose-400"
+    : "text-slate-400"
+
+  // Get current time for the location
+  const now = new Date()
+  const timeString = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
 
   return (
     <button
       onClick={onClick}
       className={`
-        w-full text-left rounded-xl overflow-hidden transition-all duration-200
+        w-full text-left rounded-2xl overflow-hidden transition-all duration-300
         ${isSelected 
-          ? "ring-2 ring-accent shadow-lg scale-[1.02]" 
-          : "hover:scale-[1.01] hover:shadow-md"
+          ? "ring-2 ring-white/30 shadow-xl scale-[1.02]" 
+          : "hover:scale-[1.01] hover:shadow-lg"
         }
       `}
     >
-      <div className={`relative bg-gradient-to-br ${scheme.bg} p-4`}>
-        {/* Grid pattern overlay */}
-        <div 
-          className="absolute inset-0 opacity-[0.15]"
-          style={{
-            backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
-            backgroundSize: '20px 20px'
-          }}
-        />
+      <div className={`relative bg-gradient-to-br ${scheme.bg} p-4 min-h-[120px]`}>
+        {/* Subtle noise/texture overlay */}
+        <div className={`absolute inset-0 ${scheme.overlay}`} />
+        
+        {/* Stars/dots pattern for depth */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-3 right-8 w-1 h-1 bg-white/60 rounded-full" />
+          <div className="absolute top-6 right-4 w-0.5 h-0.5 bg-white/40 rounded-full" />
+          <div className="absolute bottom-8 right-12 w-0.5 h-0.5 bg-white/50 rounded-full" />
+          <div className="absolute top-10 right-16 w-0.5 h-0.5 bg-white/30 rounded-full" />
+        </div>
         
         <div className="relative">
-          {/* Location name and label */}
-          <div className="flex items-center justify-between mb-1">
-            <h3 className={`font-semibold ${scheme.text}`}>{location.name}</h3>
-            {location.label && (
-              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-500 bg-white/50 px-1.5 py-0.5 rounded">
-                {location.label}
-              </span>
-            )}
-          </div>
-          
-          {/* Score - prominent */}
-          <div className="flex items-baseline gap-2 mt-2">
-            <span className={`text-4xl font-light ${scheme.text}`}>
+          {/* Top row: Name and Score */}
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="font-semibold text-white text-lg">{location.name}</h3>
+              <p className="text-white/60 text-xs mt-0.5">
+                {timeString}
+                {location.label && (
+                  <span className="ml-2 text-white/40">• {location.label}</span>
+                )}
+              </p>
+            </div>
+            <span className="text-4xl font-light text-white">
               {location.stabilityScore}
             </span>
-            <div className={`flex items-center gap-1 ${trendColor}`}>
-              <TrendIcon className="w-3.5 h-3.5" />
-              <span className="text-xs font-medium">
-                {location.trendPercent > 0 ? "+" : ""}{location.trendPercent}%
-              </span>
-            </div>
           </div>
           
-          {/* Brief status */}
-          <p className="text-xs text-slate-600 mt-2">{location.briefStatus}</p>
+          {/* Bottom row: Status and Trend */}
+          <div className="flex items-end justify-between mt-6">
+            <p className="text-white/70 text-sm">{location.briefStatus}</p>
+            <div className="text-right">
+              <div className={`flex items-center gap-1 ${trendColor} text-xs`}>
+                <TrendIcon className="w-3 h-3" />
+                <span>{location.trendPercent > 0 ? "+" : ""}{location.trendPercent}%</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </button>
@@ -140,27 +143,37 @@ export function OrbitSidebar({
       `}
     >
       {/* Header with logo/toggle */}
-      <div className="p-4 border-b border-border/40 flex items-center justify-center">
-        <button
-          onClick={onToggle}
-          onMouseEnter={() => setLogoHovered(true)}
-          onMouseLeave={() => setLogoHovered(false)}
-          className="relative w-8 h-8 flex items-center justify-center transition-all duration-200"
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {logoHovered ? (
-            collapsed ? (
-              <PanelLeft className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
-            ) : (
-              <PanelLeftClose className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
-            )
-          ) : (
-            // Text logo fallback - drop your logo at /public/images/raven-logo.png
-            <span className="font-mono text-sm uppercase tracking-wider text-accent font-semibold">
-              R
-            </span>
-          )}
-        </button>
+      <div className="p-4 border-b border-border/40">
+        <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"}`}>
+          {/* Logo and brand */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onToggle}
+              onMouseEnter={() => setLogoHovered(true)}
+              onMouseLeave={() => setLogoHovered(false)}
+              className="relative w-8 h-8 flex items-center justify-center transition-all duration-200"
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {logoHovered ? (
+                collapsed ? (
+                  <PanelLeft className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
+                ) : (
+                  <PanelLeftClose className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
+                )
+              ) : (
+                // Text logo fallback - drop your logo at /public/images/raven-logo.png
+                <span className="font-mono text-sm uppercase tracking-wider text-accent font-semibold">
+                  R
+                </span>
+              )}
+            </button>
+            {!collapsed && (
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-foreground font-medium">
+                Raven
+              </span>
+            )}
+          </div>
+        </div>
       </div>
       
       {/* Location cards - only show when expanded */}

@@ -24,6 +24,16 @@ import {
 } from "lucide-react"
 
 // ============================================
+// GET TIME-BASED GREETING
+// ============================================
+function getGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour < 12) return "Good morning"
+  if (hour < 17) return "Good afternoon"
+  return "Good evening"
+}
+
+// ============================================
 // SCORE HERO - Prominent, not hidden
 // ============================================
 function ScoreHero({ location }: { location: LocationData }) {
@@ -39,18 +49,19 @@ function ScoreHero({ location }: { location: LocationData }) {
     ? "text-rose-600"
     : "text-muted-foreground"
 
-  const scoreColor = location.stabilityScore >= 75 
-    ? "text-emerald-600" 
-    : location.stabilityScore >= 60 
-    ? "text-sky-600"
-    : location.stabilityScore >= 45
-    ? "text-amber-600"
-    : "text-rose-600"
+  const greeting = getGreeting()
+  // TODO: Replace with actual user name from auth
+  const userName = "Derek"
 
   return (
     <div className="mb-8">
+      {/* Greeting */}
+      <h1 className="font-[family-name:var(--font-bebas)] text-3xl md:text-4xl tracking-tight text-foreground mb-1">
+        {greeting}, {userName}
+      </h1>
+      
       {/* Location and date */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-6">
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
           Raven Brief
         </span>
@@ -66,10 +77,10 @@ function ScoreHero({ location }: { location: LocationData }) {
 
       {/* Score and narrative side by side */}
       <div className="flex items-start gap-8">
-        {/* Score - prominent */}
+        {/* Score - prominent with gradient */}
         <div className="flex-shrink-0">
           <div className="flex items-baseline gap-1">
-            <span className={`text-6xl md:text-7xl font-light tracking-tight ${scoreColor}`}>
+            <span className="text-6xl md:text-7xl font-light tracking-tight bg-gradient-to-br from-accent via-orange-500 to-amber-500 bg-clip-text text-transparent">
               {location.stabilityScore}
             </span>
           </div>
@@ -165,7 +176,7 @@ function RavenAnalysisCard({ onOpenModal }: { onOpenModal: () => void }) {
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent font-semibold">
               Emerging Pattern
             </span>
             <span className="font-mono text-[10px] text-muted-foreground">
@@ -173,7 +184,7 @@ function RavenAnalysisCard({ onOpenModal }: { onOpenModal: () => void }) {
             </span>
           </div>
 
-          <h3 className="font-[family-name:var(--font-bebas)] text-2xl md:text-3xl tracking-tight text-foreground mb-3">
+          <h3 className="font-[family-name:var(--font-bebas)] text-2xl md:text-4xl tracking-tight text-foreground mb-3">
             Vehicle Break-ins — Downtown Corridor
           </h3>
 
@@ -220,7 +231,7 @@ function ActiveConditionsCard({ onOpenModal }: { onOpenModal: () => void }) {
     <IntelCard onClick={onOpenModal}>
       <div className="flex items-center gap-3 mb-4">
         <AlertTriangle className="w-4 h-4 text-amber-500" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber-600">
+        <span className="font-mono text-xs uppercase tracking-[0.2em] text-amber-600 font-semibold">
           Active Conditions
         </span>
         <span className="font-mono text-[10px] text-muted-foreground">
@@ -234,7 +245,7 @@ function ActiveConditionsCard({ onOpenModal }: { onOpenModal: () => void }) {
             <condition.icon className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between gap-2">
-                <h4 className="font-mono text-sm font-medium text-foreground">{condition.title}</h4>
+                <h4 className="font-mono text-sm font-semibold text-foreground">{condition.title}</h4>
                 <span className="font-mono text-[10px] text-muted-foreground whitespace-nowrap">{condition.timeline}</span>
               </div>
               <p className="font-mono text-xs text-muted-foreground mt-0.5">{condition.detail}</p>
@@ -267,7 +278,7 @@ function CivicSignalsCard({ onOpenModal }: { onOpenModal: () => void }) {
     <IntelCard onClick={onOpenModal}>
       <div className="flex items-center gap-3 mb-4">
         <Landmark className="w-4 h-4 text-sky-500" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-sky-600">
+        <span className="font-mono text-xs uppercase tracking-[0.2em] text-sky-600 font-semibold">
           Civic Signals
         </span>
       </div>
@@ -276,7 +287,7 @@ function CivicSignalsCard({ onOpenModal }: { onOpenModal: () => void }) {
         {signals.map((signal, i) => (
           <div key={i} className={i > 0 ? "pt-4 border-t border-border/30" : ""}>
             <div className="flex items-start justify-between gap-2 mb-1">
-              <h4 className="font-mono text-sm font-medium text-foreground">{signal.title}</h4>
+              <h4 className="font-mono text-sm font-semibold text-foreground">{signal.title}</h4>
               <span className="font-mono text-[10px] text-muted-foreground whitespace-nowrap">{signal.date}</span>
             </div>
             <p className="font-mono text-xs text-foreground/60">{signal.impact}</p>
@@ -301,7 +312,7 @@ function WhatsQuietCard({ onOpenModal }: { onOpenModal: () => void }) {
     <IntelCard variant="quiet" onClick={onOpenModal}>
       <div className="flex items-center gap-3 mb-4">
         <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-600">
+        <span className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold">
           What's Quiet
         </span>
       </div>
@@ -335,7 +346,7 @@ function TemporalPatternsCard({ onOpenModal }: { onOpenModal: () => void }) {
     <IntelCard onClick={onOpenModal}>
       <div className="flex items-center gap-3 mb-4">
         <Clock className="w-4 h-4 text-muted-foreground" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+        <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">
           When Things Happen
         </span>
       </div>
@@ -361,7 +372,7 @@ function MapPreviewCard({ onNavigateToMap }: { onNavigateToMap: () => void }) {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <Map className="w-4 h-4 text-muted-foreground" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground font-semibold">
             Activity Map
           </span>
         </div>
