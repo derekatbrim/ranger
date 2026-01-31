@@ -13,7 +13,8 @@ import {
   X,
   MapPin,
   Layers,
-  ChevronRight
+  ChevronRight,
+  ChevronUp
 } from "lucide-react"
 import type { Incident } from "@/lib/mock-data"
 
@@ -80,6 +81,7 @@ export function MapPageView({ incidents, onIncidentSelect, selectedIncident }: M
   const [mapLoaded, setMapLoaded] = useState(false)
   const [activeFilters, setActiveFilters] = useState<string[]>(["crime", "civic", "infrastructure"])
   const [showHeatmap, setShowHeatmap] = useState(false)
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
 
   const toggleFilter = (filterId: string) => {
     setActiveFilters(prev => 
@@ -172,7 +174,10 @@ export function MapPageView({ incidents, onIncidentSelect, selectedIncident }: M
 
         const marker = L.marker([incident.coordinates.lat, incident.coordinates.lng], { icon })
           .addTo(map)
-          .on("click", () => onIncidentSelect(incident))
+          .on("click", () => {
+            onIncidentSelect(incident)
+            setMobileSheetOpen(true)
+          })
 
         markersRef.current.push(marker)
       })
@@ -192,24 +197,24 @@ export function MapPageView({ incidents, onIncidentSelect, selectedIncident }: M
   }, [mapLoaded, selectedIncident])
 
   return (
-    <div className="flex-1 flex h-full">
+    <div className="flex-1 flex flex-col md:flex-row h-full relative">
       {/* Map Area */}
       <div className="flex-1 relative">
         {/* Top Controls */}
-        <div className="absolute top-4 left-4 right-4 z-[1000] flex items-center gap-3">
+        <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-3">
           {/* Search */}
-          <div className="relative flex-shrink-0">
+          <div className="relative flex-shrink-0 w-full md:w-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search location..."
               defaultValue="Crystal Lake, IL"
-              className="w-64 bg-background/95 backdrop-blur-sm border border-border shadow-sm py-2.5 pl-10 pr-4 font-mono text-sm focus:outline-none focus:ring-1 focus:ring-accent"
+              className="w-full md:w-64 bg-background/95 backdrop-blur-sm border border-border shadow-sm py-2.5 pl-10 pr-4 font-mono text-sm focus:outline-none focus:ring-1 focus:ring-accent"
             />
           </div>
 
-          {/* Filter chips */}
-          <div className="flex items-center gap-2">
+          {/* Filter chips - horizontal scroll on mobile */}
+          <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 -mb-2 md:mb-0">
             {filterOptions.map((filter) => {
               const isActive = activeFilters.includes(filter.id)
               const Icon = filter.icon
@@ -218,25 +223,25 @@ export function MapPageView({ incidents, onIncidentSelect, selectedIncident }: M
                   key={filter.id}
                   onClick={() => toggleFilter(filter.id)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-2 font-mono text-xs uppercase tracking-wider border transition-all",
+                    "flex items-center gap-2 px-3 py-2 font-mono text-xs uppercase tracking-wider border transition-all whitespace-nowrap flex-shrink-0",
                     isActive
                       ? "bg-foreground text-background border-foreground"
                       : "bg-background/95 backdrop-blur-sm text-muted-foreground border-border hover:border-foreground/50"
                   )}
                 >
                   <Icon className="w-3.5 h-3.5" />
-                  {filter.label}
+                  <span className="hidden sm:inline">{filter.label}</span>
                   {isActive && <X className="w-3 h-3 ml-1" />}
                 </button>
               )
             })}
           </div>
 
-          {/* Layer toggle */}
+          {/* Layer toggle - hidden on mobile */}
           <button
             onClick={() => setShowHeatmap(!showHeatmap)}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 font-mono text-xs uppercase tracking-wider border transition-all ml-auto",
+              "hidden md:flex items-center gap-2 px-3 py-2 font-mono text-xs uppercase tracking-wider border transition-all ml-auto",
               showHeatmap
                 ? "bg-accent text-accent-foreground border-accent"
                 : "bg-background/95 backdrop-blur-sm text-muted-foreground border-border hover:border-accent/50"
@@ -257,8 +262,8 @@ export function MapPageView({ incidents, onIncidentSelect, selectedIncident }: M
           </div>
         )}
 
-        {/* Legend */}
-        <div className="absolute bottom-4 left-4 z-[1000] bg-background/95 backdrop-blur-sm border border-border p-3">
+        {/* Legend - hidden on mobile */}
+        <div className="hidden md:block absolute bottom-4 left-4 z-[1000] bg-background/95 backdrop-blur-sm border border-border p-3">
           <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mb-2">Legend</p>
           <div className="space-y-1.5">
             {filterOptions.map(filter => {
@@ -275,10 +280,22 @@ export function MapPageView({ incidents, onIncidentSelect, selectedIncident }: M
             })}
           </div>
         </div>
+
+        {/* Mobile: Floating button to open incident list */}
+        <button
+          onClick={() => setMobileSheetOpen(true)}
+          className="md:hidden absolute bottom-4 left-4 right-4 z-[1000] bg-background border border-border shadow-lg p-4 flex items-center justify-between"
+        >
+          <div>
+            <p className="font-mono text-xs uppercase tracking-wider text-accent">Activity Feed</p>
+            <p className="font-mono text-sm text-foreground">{filteredIncidents.length} incidents</p>
+          </div>
+          <ChevronUp className="w-5 h-5 text-muted-foreground" />
+        </button>
       </div>
 
-      {/* Incident Panel */}
-      <div className="w-[380px] border-l border-border bg-background flex flex-col h-full">
+      {/* Desktop: Incident Panel */}
+      <div className="hidden md:flex w-[380px] border-l border-border bg-background flex-col h-full">
         {/* Header */}
         <div className="flex-shrink-0 px-5 py-4 border-b border-border">
           <div className="flex items-center gap-2 mb-1">
@@ -309,6 +326,51 @@ export function MapPageView({ incidents, onIncidentSelect, selectedIncident }: M
           </div>
         </div>
       </div>
+
+      {/* Mobile: Bottom Sheet */}
+      {mobileSheetOpen && (
+        <div className="md:hidden fixed inset-0 z-[1001]">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMobileSheetOpen(false)}
+          />
+          
+          {/* Sheet */}
+          <div className="absolute bottom-0 left-0 right-0 bg-background border-t border-border rounded-t-2xl max-h-[70vh] flex flex-col">
+            {/* Handle */}
+            <div className="flex justify-center py-3">
+              <div className="w-10 h-1 bg-border rounded-full" />
+            </div>
+            
+            {/* Header */}
+            <div className="flex-shrink-0 px-4 pb-3 border-b border-border flex items-center justify-between">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-accent">Activity Feed</p>
+                <p className="font-mono text-sm text-foreground">{filteredIncidents.length} incidents</p>
+              </div>
+              <button 
+                onClick={() => setMobileSheetOpen(false)}
+                className="p-2 text-muted-foreground"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Cards */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {filteredIncidents.map((incident) => (
+                <IncidentCard 
+                  key={incident.id}
+                  incident={incident}
+                  isSelected={selectedIncident?.id === incident.id}
+                  onSelect={() => onIncidentSelect(incident)}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

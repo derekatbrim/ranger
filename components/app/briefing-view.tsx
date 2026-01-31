@@ -54,14 +54,14 @@ function ScoreHero({ location }: { location: LocationData }) {
   const userName = "Derek"
 
   return (
-    <div className="mb-8">
+    <div className="mb-6 md:mb-8">
       {/* Greeting */}
-      <h1 className="font-[family-name:var(--font-bebas)] text-3xl md:text-4xl tracking-tight text-foreground mb-1">
+      <h1 className="font-[family-name:var(--font-bebas)] text-2xl md:text-4xl tracking-tight text-foreground mb-1">
         {greeting}, {userName}
       </h1>
       
       {/* Location and date */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-4 md:mb-6">
         <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
           Raven Brief
         </span>
@@ -75,28 +75,30 @@ function ScoreHero({ location }: { location: LocationData }) {
         </span>
       </div>
 
-      {/* Score and narrative side by side */}
-      <div className="flex items-start gap-8">
+      {/* Score and narrative - stacked on mobile, side by side on desktop */}
+      <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
         {/* Score - prominent with gradient */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 flex md:block items-center gap-4">
           <div className="flex items-baseline gap-1">
-            <span className="text-6xl md:text-7xl font-light tracking-tight bg-gradient-to-br from-accent via-orange-500 to-amber-500 bg-clip-text text-transparent">
+            <span className="text-5xl md:text-7xl font-light tracking-tight bg-gradient-to-br from-accent via-orange-500 to-amber-500 bg-clip-text text-transparent">
               {location.stabilityScore}
             </span>
           </div>
-          <div className={`flex items-center gap-1.5 mt-1 ${trendColor}`}>
-            <TrendIcon className="w-4 h-4" />
-            <span className="font-mono text-xs">
-              {location.trendPercent > 0 ? "+" : ""}{location.trendPercent}% vs last week
-            </span>
+          <div className="md:mt-1">
+            <div className={`flex items-center gap-1.5 ${trendColor}`}>
+              <TrendIcon className="w-4 h-4" />
+              <span className="font-mono text-xs">
+                {location.trendPercent > 0 ? "+" : ""}{location.trendPercent}% vs last week
+              </span>
+            </div>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mt-1 md:mt-2">
+              Stability Index
+            </p>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mt-2">
-            Stability Index
-          </p>
         </div>
 
         {/* Narrative */}
-        <div className="flex-1 pt-2">
+        <div className="flex-1">
           <p className="font-mono text-sm md:text-base text-foreground/80 leading-relaxed">
             Activity in {location.name} remains <span className="text-foreground font-medium">{location.trend}</span> this week. 
             Property incidents are concentrated overnight in the downtown corridor — a pattern now in its third week. 
@@ -466,12 +468,12 @@ export function BriefingView({
 
   return (
     <div className="flex-1 overflow-y-auto" data-lenis-prevent>
-      <div className="p-6 md:p-8 lg:p-12">
+      <div className="p-4 md:p-8 lg:p-12">
         {/* Score and narrative */}
         <ScoreHero location={selectedLocation} />
 
         {/* Cards grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
           {/* Primary - full width */}
           <div className="lg:col-span-2">
             <RavenAnalysisCard onOpenModal={() => openModal("Vehicle Break-ins Pattern")} />
@@ -492,7 +494,7 @@ export function BriefingView({
         </div>
 
         {/* Footer */}
-        <footer className="mt-8 pt-6 border-t border-border/40 flex flex-wrap items-center justify-between gap-4">
+        <footer className="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-border/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <span className="font-mono text-[10px] text-muted-foreground">
             Last updated 5 minutes ago
           </span>
