@@ -3,33 +3,29 @@
 
 import { 
   CURRENT_LOCATION, 
-  HOURLY_ACTIVITY, 
-  WEEKLY_TREND, 
-  CATEGORY_INDICES,
-  PULSE_BRIEFING,
-  PEAK_HOURS,
-  ALERT_LEVEL,
-  HEAT_ZONES,
-  getScoreColor 
+  WEEKLY_TREND
 } from "@/lib/raven-data"
 import { 
   TrendingUp, 
   TrendingDown, 
   Minus, 
-  AlertTriangle,
-  Shield,
+  AlertCircle,
   Construction,
   Landmark,
   Clock,
   Map,
   ChevronRight,
-  Info
+  Zap,
+  FileText,
+  Calendar
 } from "lucide-react"
+import { ScoreFlap } from "./score-flap"
 
-// Score Hero - The big number like temperature
+// ============================================
+// HERO: Stability Score with Split-Flap
+// ============================================
 function ScoreHero() {
   const location = CURRENT_LOCATION
-  const scoreColor = getScoreColor(location.stabilityScore)
   
   const trendIcon = location.trend === "improving" 
     ? <TrendingUp className="w-4 h-4" />
@@ -45,13 +41,15 @@ function ScoreHero() {
 
   return (
     <div className="text-center py-8 px-4">
-      <h1 className="text-xl font-medium text-slate-700 mb-1">{location.name}</h1>
-      <div className="flex items-baseline justify-center gap-1">
-        <span className="text-8xl font-light text-slate-900 tracking-tight">
-          {location.stabilityScore}
-        </span>
+      <p className="text-sm text-slate-500 uppercase tracking-wide mb-1">Stability Index</p>
+      <h1 className="text-xl font-semibold text-slate-800 mb-4">{location.name}</h1>
+      
+      {/* Split-flap score */}
+      <div className="flex justify-center mb-4">
+        <ScoreFlap score={location.stabilityScore} />
       </div>
-      <div className={`flex items-center justify-center gap-1.5 mt-2 ${trendColor}`}>
+      
+      <div className={`flex items-center justify-center gap-1.5 ${trendColor}`}>
         {trendIcon}
         <span className="text-sm font-medium">
           {location.trend === "stable" ? "Stable" : `${location.trendPercent > 0 ? "+" : ""}${location.trendPercent}%`}
@@ -63,175 +61,282 @@ function ScoreHero() {
   )
 }
 
-// Pulse Briefing Card - Like severe weather alert
-function PulseBriefingCard() {
-  const pulse = PULSE_BRIEFING
-  
-  const severityStyles = {
-    info: "bg-sky-50 border-sky-200",
-    advisory: "bg-amber-50 border-amber-200", 
-    warning: "bg-rose-50 border-rose-200"
-  }
-  
-  const severityIcon = {
-    info: <Info className="w-5 h-5 text-sky-600" />,
-    advisory: <AlertTriangle className="w-5 h-5 text-amber-600" />,
-    warning: <AlertTriangle className="w-5 h-5 text-rose-600" />
-  }
-
+// ============================================
+// EMERGING PATTERN - The Killer Feature
+// ============================================
+function EmergingPatternCard() {
   return (
-    <div className={`rounded-2xl border p-4 ${severityStyles[pulse.severity]}`}>
+    <div className="bg-white rounded-xl border border-slate-200 p-5">
       <div className="flex items-start gap-3">
-        <div className="mt-0.5">{severityIcon[pulse.severity]}</div>
+        <div className="p-2 rounded-lg bg-rose-50">
+          <Zap className="w-5 h-5 text-rose-600" />
+        </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-slate-900">{pulse.title}</h3>
+          <p className="text-xs text-slate-400 uppercase tracking-wide mb-1">Emerging Pattern</p>
+          <h3 className="font-semibold text-slate-900 text-lg">Vehicle Break-ins Identified</h3>
+          
+          <div className="flex items-center gap-4 mt-2">
+            <div className="flex items-center gap-1 text-rose-600">
+              <TrendingUp className="w-4 h-4" />
+              <span className="text-sm font-medium">↑ 23% over 3 weeks</span>
+            </div>
+            <span className="text-sm text-slate-500">11pm – 3am</span>
           </div>
-          <p className="text-sm text-slate-600 mt-1">{pulse.summary}</p>
-          <p className="text-xs text-slate-400 mt-2">{pulse.source}</p>
+          
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <p className="text-sm text-slate-600">
+              <span className="font-medium text-slate-700">What it means:</span> Concentrated around Main St parking lots. Avoid leaving valuables in unsecured vehicles overnight.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-// Hourly Timeline - Like hourly weather strip
-function HourlyTimeline() {
-  const hours = HOURLY_ACTIVITY
-  
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case "elevated": return "bg-rose-500"
-      case "moderate": return "bg-amber-400"
-      default: return "bg-emerald-400"
-    }
+// ============================================
+// ACTIVE DISRUPTIONS - Infrastructure Issues
+// ============================================
+interface Disruption {
+  id: string
+  type: "road" | "water" | "power" | "transit"
+  title: string
+  impact: string
+  until?: string
+}
+
+const MOCK_DISRUPTIONS: Disruption[] = [
+  {
+    id: "1",
+    type: "road",
+    title: "Route 14 Eastbound Closure",
+    impact: "Commute delays expected",
+    until: "Through Friday"
+  },
+  {
+    id: "2", 
+    type: "water",
+    title: "Water Main Repair — Walkup Ave",
+    impact: "Low pressure possible",
+    until: "Est. tomorrow evening"
+  }
+]
+
+function ActiveDisruptionsCard() {
+  const typeIcons = {
+    road: Construction,
+    water: Construction,
+    power: Zap,
+    transit: Construction
   }
 
+  if (MOCK_DISRUPTIONS.length === 0) return null
+
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-4">
-      <p className="text-xs text-slate-500 mb-3">
-        Activity has been low through the evening. Peak expected overnight 11PM-2AM.
-      </p>
-      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-        {hours.map((hour, i) => (
-          <div key={i} className="flex flex-col items-center min-w-[44px]">
-            <span className="text-xs text-slate-500 mb-2">{hour.hour}</span>
-            <div className="h-8 w-8 rounded-full flex items-center justify-center bg-slate-100">
-              <div className={`w-3 h-3 rounded-full ${getSeverityColor(hour.severity)}`} />
+    <div className="bg-white rounded-xl border border-slate-200 p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <AlertCircle className="w-4 h-4 text-amber-500" />
+        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide">Active Disruptions</h3>
+        <span className="ml-auto text-xs text-slate-400">{MOCK_DISRUPTIONS.length} active</span>
+      </div>
+      
+      <div className="space-y-3">
+        {MOCK_DISRUPTIONS.map((disruption) => {
+          const Icon = typeIcons[disruption.type]
+          return (
+            <div key={disruption.id} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50">
+              <Icon className="w-4 h-4 text-amber-600 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="font-medium text-slate-800 text-sm">{disruption.title}</p>
+                  {disruption.until && (
+                    <span className="text-xs text-slate-400 whitespace-nowrap">{disruption.until}</span>
+                  )}
+                </div>
+                <p className="text-sm text-slate-500 mt-0.5">{disruption.impact}</p>
+              </div>
             </div>
-            <span className="text-xs font-medium text-slate-700 mt-2">{hour.incidents}</span>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
 }
 
-// 7-Day Trend Card - Like 10-day forecast
-function WeeklyTrendCard() {
-  const trend = WEEKLY_TREND
-  const maxIncidents = Math.max(...trend.map(d => d.incidents))
+// ============================================
+// CIVIC SIGNALS - Rezoning, Development, etc.
+// ============================================
+interface CivicSignal {
+  id: string
+  type: "rezoning" | "development" | "tax" | "event"
+  title: string
+  implication: string
+  date?: string
+}
 
+const MOCK_CIVIC_SIGNALS: CivicSignal[] = [
+  {
+    id: "1",
+    type: "rezoning",
+    title: "B-2 Commercial Rezoning Approved",
+    implication: "Retail expansion likely on Virginia St corridor",
+    date: "Effective Feb 15"
+  },
+  {
+    id: "2",
+    type: "development",
+    title: "Mixed-Use Development Permit Filed",
+    implication: "150 residential units + ground floor retail proposed",
+    date: "Public hearing Mar 5"
+  }
+]
+
+function CivicSignalsCard() {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-4">
+    <div className="bg-white rounded-xl border border-slate-200 p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <Landmark className="w-4 h-4 text-sky-500" />
+        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide">Civic Signals</h3>
+      </div>
+      
+      <div className="space-y-4">
+        {MOCK_CIVIC_SIGNALS.map((signal) => (
+          <div key={signal.id} className="group">
+            <div className="flex items-start justify-between gap-2">
+              <h4 className="font-medium text-slate-800 text-sm group-hover:text-sky-600 cursor-pointer transition-colors">
+                {signal.title}
+              </h4>
+              {signal.date && (
+                <span className="text-xs text-slate-400 whitespace-nowrap">{signal.date}</span>
+              )}
+            </div>
+            <p className="text-sm text-slate-500 mt-1">{signal.implication}</p>
+          </div>
+        ))}
+      </div>
+      
+      <button className="w-full mt-4 pt-3 border-t border-slate-100 text-sm text-sky-600 font-medium hover:text-sky-700 flex items-center justify-center gap-1">
+        View all civic activity <ChevronRight className="w-4 h-4" />
+      </button>
+    </div>
+  )
+}
+
+// ============================================
+// TEMPORAL RISK WINDOWS - Peak Hours Interpreted
+// ============================================
+function TemporalWindowsCard() {
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 p-5">
       <div className="flex items-center gap-2 mb-4">
         <Clock className="w-4 h-4 text-slate-400" />
-        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide">7-Day Trend</h3>
+        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide">Activity Windows</h3>
       </div>
-      <div className="space-y-3">
-        {trend.map((day, i) => (
-          <div key={i} className="flex items-center gap-4">
-            <span className="text-sm font-medium text-slate-700 w-12">{day.day}</span>
-            <div className="flex-1 flex items-center gap-3">
-              <span className="text-sm text-slate-400 w-8">{day.low}</span>
-              <div className="flex-1 h-1.5 bg-slate-100 rounded-full relative">
-                <div 
-                  className="absolute h-full bg-gradient-to-r from-sky-400 to-sky-500 rounded-full"
-                  style={{ 
-                    left: `${((day.low - 60) / 30) * 100}%`,
-                    width: `${((day.high - day.low) / 30) * 100}%`
-                  }}
-                />
-                <div 
-                  className="absolute w-2 h-2 bg-slate-700 rounded-full -top-0.5"
-                  style={{ left: `${((day.score - 60) / 30) * 100}%` }}
-                />
-              </div>
-              <span className="text-sm font-medium text-slate-700 w-8">{day.high}</span>
-            </div>
-            <div className="flex items-center gap-1 w-16 justify-end">
-              <span className="text-xs text-slate-400">{day.incidents}</span>
-              <div 
-                className="h-4 bg-slate-200 rounded"
-                style={{ width: `${(day.incidents / maxIncidents) * 32}px` }}
-              />
-            </div>
+      
+      <div className="space-y-4">
+        <div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-slate-800">Higher Activity Window</span>
+            <span className="text-sm font-semibold text-slate-900">11PM – 2AM</span>
           </div>
-        ))}
+          <p className="text-sm text-slate-500 mt-1">Typical for downtown corridor. Property incidents concentrate in this window.</p>
+        </div>
+        
+        <div className="h-px bg-slate-100" />
+        
+        <div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-slate-800">Quietest Period</span>
+            <span className="text-sm font-semibold text-emerald-600">3AM – 7AM</span>
+          </div>
+          <p className="text-sm text-slate-500 mt-1">Consistently low activity. Residential areas stable.</p>
+        </div>
+        
+        <div className="h-px bg-slate-100" />
+        
+        <div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-slate-800">Rush Hour Impact</span>
+            <span className="text-sm font-semibold text-amber-600">5PM – 7PM</span>
+          </div>
+          <p className="text-sm text-slate-500 mt-1">Minor vehicle incidents typical. Route 14 closure adding 15-20 min delays.</p>
+        </div>
       </div>
     </div>
   )
 }
 
-// Category Index Card - Like Air Quality
-function CategoryIndexCard({ category }: { category: typeof CATEGORY_INDICES[0] }) {
-  const icons = {
-    Safety: <Shield className="w-4 h-4" />,
-    Infrastructure: <Construction className="w-4 h-4" />,
-    Civic: <Landmark className="w-4 h-4" />
-  }
-  
-  const colors = {
-    rose: "text-rose-600 bg-rose-50",
-    amber: "text-amber-600 bg-amber-50",
-    sky: "text-sky-600 bg-sky-50",
-    emerald: "text-emerald-600 bg-emerald-50"
-  }
-  
-  const scoreColor = category.score >= 75 ? "emerald" : category.score >= 60 ? "sky" : category.score >= 45 ? "amber" : "rose"
-  
-  const TrendIcon = category.trend === "up" ? TrendingUp : category.trend === "down" ? TrendingDown : Minus
-  const trendColor = category.trend === "up" ? "text-emerald-600" : category.trend === "down" ? "text-rose-600" : "text-slate-400"
+// ============================================
+// 7-DAY TREND - Like Weather Daily Forecast
+// ============================================
+function WeeklyTrendCard() {
+  const trend = WEEKLY_TREND
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-4">
-      <div className="flex items-center gap-2 mb-2">
-        <span className={`p-1.5 rounded-lg ${colors[category.color as keyof typeof colors]}`}>
-          {icons[category.name as keyof typeof icons]}
-        </span>
-        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide">{category.name}</h3>
+    <div className="bg-white rounded-xl border border-slate-200 p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <Calendar className="w-4 h-4 text-slate-400" />
+        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide">7-Day Overview</h3>
       </div>
-      <div className="flex items-baseline gap-2">
-        <span className="text-3xl font-semibold text-slate-900">{category.score}</span>
-        <span className={`text-sm ${colors[scoreColor as keyof typeof colors].split(" ")[0]} font-medium`}>
-          {category.score >= 75 ? "Good" : category.score >= 60 ? "Fair" : category.score >= 45 ? "Poor" : "Critical"}
-        </span>
-      </div>
-      <div className="h-1.5 bg-slate-100 rounded-full mt-3 overflow-hidden">
-        <div 
-          className={`h-full rounded-full ${
-            scoreColor === "emerald" ? "bg-emerald-500" :
-            scoreColor === "sky" ? "bg-sky-500" :
-            scoreColor === "amber" ? "bg-amber-500" : "bg-rose-500"
-          }`}
-          style={{ width: `${category.score}%` }}
-        />
-      </div>
-      <p className="text-sm text-slate-600 mt-3">{category.description}</p>
-      <div className={`flex items-center gap-1 mt-2 ${trendColor}`}>
-        <TrendIcon className="w-3 h-3" />
-        <span className="text-xs font-medium">
-          {category.trendPercent > 0 ? "+" : ""}{category.trendPercent}% vs last week
-        </span>
+      
+      <div className="divide-y divide-slate-100">
+        {trend.map((day, i) => {
+          const isToday = day.day === "Today"
+          const scoreColor = day.score >= 75 ? "text-emerald-600" : day.score >= 65 ? "text-sky-600" : day.score >= 50 ? "text-amber-600" : "text-rose-600"
+          const barColor = day.score >= 75 ? "bg-emerald-500" : day.score >= 65 ? "bg-sky-500" : day.score >= 50 ? "bg-amber-500" : "bg-rose-500"
+          
+          return (
+            <button 
+              key={i} 
+              className={`w-full flex items-center gap-4 py-3 hover:bg-slate-50 transition-colors ${isToday ? "bg-slate-50" : ""}`}
+            >
+              <div className="w-14">
+                <span className={`text-sm ${isToday ? "font-semibold text-slate-900" : "text-slate-600"}`}>
+                  {day.day}
+                </span>
+              </div>
+              
+              {/* Incidents indicator */}
+              <div className="flex items-center gap-1 w-12">
+                <FileText className="w-3 h-3 text-slate-400" />
+                <span className="text-xs text-slate-500">{day.incidents}</span>
+              </div>
+              
+              {/* Score bar visualization */}
+              <div className="flex-1 flex items-center gap-3">
+                <span className="text-sm text-slate-400 w-6">{day.low}</span>
+                <div className="flex-1 h-1.5 bg-slate-100 rounded-full relative">
+                  <div 
+                    className={`absolute h-full ${barColor} rounded-full`}
+                    style={{ 
+                      left: `${((day.low - 50) / 40) * 100}%`,
+                      width: `${((day.high - day.low) / 40) * 100}%`
+                    }}
+                  />
+                </div>
+                <span className="text-sm text-slate-700 font-medium w-6">{day.high}</span>
+              </div>
+              
+              {/* Score */}
+              <div className={`text-right w-10 ${scoreColor} font-semibold`}>
+                {day.score}
+              </div>
+              
+              <ChevronRight className="w-4 h-4 text-slate-300" />
+            </button>
+          )
+        })}
       </div>
     </div>
   )
 }
 
-// Map Preview Card - Small heat map
+// ============================================
+// MAP PREVIEW
+// ============================================
 function MapPreviewCard({ onNavigateToMap }: { onNavigateToMap: () => void }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
       <div className="flex items-center justify-between p-4 pb-2">
         <div className="flex items-center gap-2">
           <Map className="w-4 h-4 text-slate-400" />
@@ -244,12 +349,11 @@ function MapPreviewCard({ onNavigateToMap }: { onNavigateToMap: () => void }) {
           Open <ChevronRight className="w-4 h-4" />
         </button>
       </div>
-      {/* Map placeholder - will be replaced with actual heat map */}
-      <div className="relative h-48 bg-slate-100">
+      
+      <div className="relative h-44 bg-slate-100">
         <div className="absolute inset-0 flex items-center justify-center">
           {/* Simplified heat map visualization */}
           <svg viewBox="0 0 200 120" className="w-full h-full opacity-80">
-            {/* Grid lines */}
             <defs>
               <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
                 <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" strokeWidth="0.5"/>
@@ -262,114 +366,25 @@ function MapPreviewCard({ onNavigateToMap }: { onNavigateToMap: () => void }) {
                 <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.5"/>
                 <stop offset="100%" stopColor="#f59e0b" stopOpacity="0"/>
               </radialGradient>
-              <radialGradient id="heat3" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.4"/>
-                <stop offset="100%" stopColor="#f43f5e" stopOpacity="0"/>
-              </radialGradient>
             </defs>
             <rect width="200" height="120" fill="url(#grid)"/>
-            {/* Heat zones */}
             <circle cx="100" cy="50" r="35" fill="url(#heat1)"/>
             <circle cx="60" cy="80" r="25" fill="url(#heat2)"/>
-            <circle cx="150" cy="70" r="20" fill="url(#heat3)"/>
-            {/* Location marker */}
             <circle cx="100" cy="60" r="4" fill="#0f172a"/>
             <circle cx="100" cy="60" r="8" fill="none" stroke="#0f172a" strokeWidth="1" opacity="0.3"/>
           </svg>
         </div>
         <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 text-xs text-slate-600">
-          3 active zones
+          2 active zones
         </div>
       </div>
     </div>
   )
 }
 
-// Peak Hours Card - Like sunrise/sunset
-function PeakHoursCard() {
-  const peaks = PEAK_HOURS
-
-  return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-4">
-      <div className="flex items-center gap-2 mb-3">
-        <Clock className="w-4 h-4 text-slate-400" />
-        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide">Peak Hours</h3>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <p className="text-xs text-slate-400 uppercase">Evening Rush</p>
-          <p className="text-lg font-semibold text-slate-900">{peaks.evening.start}–{peaks.evening.end}</p>
-          <p className="text-xs text-amber-600">Elevated</p>
-        </div>
-        <div>
-          <p className="text-xs text-slate-400 uppercase">Overnight</p>
-          <p className="text-lg font-semibold text-slate-900">{peaks.overnight.start}–{peaks.overnight.end}</p>
-          <p className="text-xs text-rose-600">Elevated</p>
-        </div>
-        <div>
-          <p className="text-xs text-slate-400 uppercase">Quietest</p>
-          <p className="text-lg font-semibold text-slate-900">{peaks.quietest.start}–{peaks.quietest.end}</p>
-          <p className="text-xs text-emerald-600">Low</p>
-        </div>
-        <div>
-          <p className="text-xs text-slate-400 uppercase">Morning</p>
-          <p className="text-lg font-semibold text-slate-900">{peaks.morning.start}–{peaks.morning.end}</p>
-          <p className="text-xs text-amber-600">Moderate</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Alert Level Card - Like UV Index
-function AlertLevelCard() {
-  const alert = ALERT_LEVEL
-  
-  const levelColors = {
-    low: "bg-emerald-500",
-    moderate: "bg-amber-500",
-    elevated: "bg-orange-500",
-    high: "bg-rose-500"
-  }
-  
-  const levelIndex = { low: 1, moderate: 2, elevated: 3, high: 4 }
-
-  return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-4">
-      <div className="flex items-center gap-2 mb-3">
-        <AlertTriangle className="w-4 h-4 text-slate-400" />
-        <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide">Alert Level</h3>
-      </div>
-      <div className="flex items-baseline gap-2">
-        <span className="text-3xl font-semibold text-slate-900">{levelIndex[alert.level]}</span>
-        <span className="text-lg font-medium text-slate-600">{alert.label}</span>
-      </div>
-      <div className="flex gap-1 mt-3">
-        {["low", "moderate", "elevated", "high"].map((level, i) => (
-          <div 
-            key={level}
-            className={`h-1.5 flex-1 rounded-full ${
-              i < levelIndex[alert.level] ? levelColors[level as keyof typeof levelColors] : "bg-slate-200"
-            }`}
-          />
-        ))}
-      </div>
-      <p className="text-sm text-slate-600 mt-3">{alert.description}</p>
-      {alert.factors.length > 0 && (
-        <ul className="mt-2 space-y-1">
-          {alert.factors.map((factor, i) => (
-            <li key={i} className="text-xs text-slate-500 flex items-center gap-1.5">
-              <span className="w-1 h-1 rounded-full bg-slate-400" />
-              {factor}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  )
-}
-
-// Main Home View Component
+// ============================================
+// MAIN HOME VIEW
+// ============================================
 export function HomeView({ onNavigateToMap }: { onNavigateToMap: () => void }) {
   return (
     <div 
@@ -380,32 +395,29 @@ export function HomeView({ onNavigateToMap }: { onNavigateToMap: () => void }) {
         {/* Hero Score */}
         <ScoreHero />
         
-        {/* Pulse Briefing (if active) */}
+        {/* Emerging Pattern - The most important card */}
         <div className="mb-4">
-          <PulseBriefingCard />
+          <EmergingPatternCard />
         </div>
         
-        {/* Hourly Timeline */}
+        {/* Active Disruptions */}
         <div className="mb-4">
-          <HourlyTimeline />
+          <ActiveDisruptionsCard />
         </div>
         
-        {/* Two-column grid for smaller cards */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <PeakHoursCard />
-          <AlertLevelCard />
+        {/* Civic Signals */}
+        <div className="mb-4">
+          <CivicSignalsCard />
+        </div>
+        
+        {/* Temporal Risk Windows */}
+        <div className="mb-4">
+          <TemporalWindowsCard />
         </div>
         
         {/* 7-Day Trend */}
         <div className="mb-4">
           <WeeklyTrendCard />
-        </div>
-        
-        {/* Category Indices */}
-        <div className="space-y-4 mb-4">
-          {CATEGORY_INDICES.map((cat) => (
-            <CategoryIndexCard key={cat.name} category={cat} />
-          ))}
         </div>
         
         {/* Map Preview */}
